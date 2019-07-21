@@ -1,0 +1,34 @@
+doctype html
+html
+  head
+    title
+      | SampleSalonWebsite
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+  body
+    .header-container
+        ul
+          li 
+            = link_to "ホーム", home_path
+          li 
+            = link_to "当サロンについて", about_path
+          li 
+            = link_to "サービス一覧", services_path
+          li
+            = link_to "ご予約", appointment_path
+          li 
+            = link_to "お問い合わせ", contact_path
+          li 
+            = link_to "マイページ", login_path
+    - if flash[:notice]
+      .flash-notice  
+        = flash[:notice]
+    - if session[:appointment_info]
+      .appointment-info
+        = session[:appointment_info][:total_service_time]
+        = session[:appointment_info][:total_service_price]
+    = yield
+.admin-login
+  = link_to "管理者ログイン", admin_login_path

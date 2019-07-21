@@ -1,0 +1,14 @@
+h1 管理者一覧
+= link_to "管理者アカウント", admin_account_path
+- if @admin_info.userlevelflg == 1
+  .admin_add
+    = link_to "管理者追加", admin_add_path
+
+.admins-container
+  - @other_admin_info.each do |admin|
+    .admin-box
+      = "#{admin.lastname} #{admin.firstname}"
+      - if @admin_info.userlevelflg == 1
+        .admin-manage-box
+          = link_to "編集", admin_edit_path(admin.adminid)
+          = link_to "削除", admin_delete_path(admin.adminid)

@@ -1,0 +1,71 @@
+/* line 6, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.top {
+  width: 100%;
+  height: 600px;
+  background-image: url("/images/33157694ef82073f3adffdd4da497788b7ba28b91396761408.jpg");
+  background-size: cover;
+}
+/* line 11, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.top h1 {
+  text-align: center;
+  line-height: 450px;
+}
+/* line 15, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.top a {
+  display: block;
+  width: 280px;
+  height: 55px;
+  margin: 0 auto;
+  border: solid 2px #fff;
+  border-radius: 17px;
+  background-color: #fe5e41;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+  line-height: 55px;
+}
+
+/* line 30, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services {
+  width: 100%;
+  height: 600px;
+  background-color: #f4f4f4;
+}
+/* line 34, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services h2 {
+  text-align: center;
+  color: #000;
+  padding-top: 20px;
+}
+/* line 39, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services .services-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 95%;
+  height: 300px;
+  margin: 40px auto 20px;
+}
+/* line 46, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services .services-container .service-box {
+  width: 20%;
+  height: 300px;
+  background-color: #fff;
+}
+/* line 50, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services .services-container .service-box img {
+  width: 100%;
+  height: 250px;
+  border-radius: 20px;
+}
+/* line 55, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.services .services-container .service-box h3 {
+  text-align: center;
+}
+
+/* line 63, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/main.scss */
+.footer {
+  width: 100%;
+  height: 400px;
+  background-color: #abe188;
+}

@@ -1,0 +1,24 @@
+h1 テスト
+/ TODO 前後の月に移動するためのリンク
+p = "#{@today.year}年#{@today.month}月"
+
+table
+  tr
+    - @youbi_list.each do |youbi|
+      th = "#{youbi}"
+      / - youbi_id += 1
+  tr
+    - @monthly_list.each_with_index do |date, i|
+      - logger.info(date[0].day)
+      - if date[0].day == 1
+        - logger.info("ここの値は--#{date[0].day}")
+        - while i != date[1] do
+          - logger.info("ここの値は----#{date[1]}")
+          td
+          - i += 1
+      - if date[1] == 0
+        tr
+      - if date[0].day != 1 && date[1] == 0
+        / 最後の週の日曜日(0)は、   date[1] == 0
+      td = link_to "#{date[0].day}", test_service_path(date[0], date[1], date[2]), method: :post
+      / 月と週目情報

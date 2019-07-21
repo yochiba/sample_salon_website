@@ -1,0 +1,6 @@
+h2 = "サービス名: #{@service_info.servicename}"
+
+p このページはサービス情報編集ページ
+.service-delete
+  = link_to "このサービスを削除", service_delete_path(@service_info.servicename)
+= link_to "戻る", service_manage_path

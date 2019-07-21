@@ -1,0 +1,27 @@
+h2 テスト2
+p
+  = "week_id: #{params[:week_id]}"
+p
+  = "date_id: #{params[:date_id]}"
+p
+  = "youbi_id: #{params[:youbi_id]}"
+
+h1 テスト weeklyカレンダー
+table
+  tr
+    th
+    - @appointment_date_hash[:days].zip(@appointment_date_hash[:week_days]) do |youbi, day|
+      th = "#{day}(#{youbi})"
+  - token_id = 1
+  - @appointment_date_hash[:available_time].each do |time|
+    tr
+      th = "#{time}(token_id: #{token_id})"
+      / ここで予約の可否を分ける
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      td = link_to "◯", appointment_date_service_path, method: :post
+      - token_id += 1

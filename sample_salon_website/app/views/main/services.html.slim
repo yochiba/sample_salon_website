@@ -1,0 +1,8 @@
+h1 サービス一覧
+.service-container
+  table
+    - @service_info.each do |service|
+      tr
+        td = service.servicetypename
+        td = link_to "#{service.servicename}", service_detail_path(service.servicename)
+        td = "#{service.servicetime}分"

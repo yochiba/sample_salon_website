@@ -1,0 +1,67 @@
+// Place all the styles related to the main controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.top {
+  width: 100%;
+  height: 600px;
+  background-image: url("/images/33157694ef82073f3adffdd4da497788b7ba28b91396761408.jpg");
+  background-size: cover;
+  h1 {
+    text-align: center;
+    line-height: 450px;
+  }
+  a {
+    display: block;
+    width: 280px;
+    height: 55px;
+    margin: 0 auto;
+    border: solid 2px #fff;
+    border-radius: 17px;
+    background-color: #fe5e41;
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    line-height: 55px;
+  }
+}
+
+.services {
+  width: 100%;
+  height: 600px;
+  background-color: #f4f4f4;
+  h2 {
+    text-align: center;
+    color:#000;
+    padding-top: 20px;
+  }
+  .services-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 95%;
+    height: 300px;
+    margin: 40px auto 20px;
+    .service-box {
+      width: 20%;
+      height: 300px;
+      background-color: #fff;
+      img {
+        width: 100%;
+        height: 250px;
+        border-radius: 20px;
+      }
+      h3 {
+        text-align: center;
+      }
+    }
+  }
+}
+
+
+.footer {
+  width: 100%;
+  height: 400px;
+  background-color: #abe188;
+}

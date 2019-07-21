@@ -1,0 +1,31 @@
+h1 管理者情報編集(実装まだ編集方法考えるs)
+.this-admin-info
+  = form_with model: @admin_info, local: true do |f|
+    p
+      = f.label :"姓: #{@this_admin_info.lastname}"
+    p
+      = f.text_field :edited_lastname
+    p
+      = f.label :"名: #{@this_admin_info.firstname}"
+    p
+      = f.text_field :edited_firstname
+    p
+      = f.label :"Email: #{@this_admin_info.email}"
+    p
+      = f.email_field :edited_email
+    p
+      = f.label :"管理者ＩＤ: #{@this_admin_info.adminid}"
+    p
+      = f.text_field :edited_admin_id
+    p
+      = f.label :管理者パスワード
+    p
+      = f.password_field :edited_admin_password
+    p
+      = f.label :"管理者パスワード(確認用)"
+    p
+      = f.password_field :edited_admin_password_confirmation
+    p
+      = f.submit "修正内容確認"
+= link_to "管理者一覧へ戻る", admin_manage_path
+

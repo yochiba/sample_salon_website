@@ -1,0 +1,16 @@
+h1 = "こんにちは、#{@customer_info.userid}さん！ログイン中です。"
+= link_to "ログアウト", logout_service_path, method: :post 
+.appointment-container
+  h2 あなたの予約
+  table.appointment-box
+    tr
+      td あなたの予約
+      td 予約日時
+      td 値段
+      td 所要時間
+    - @appointment_list.each do |appointment|
+      tr
+        td = appointment.servicename
+        td = appointment.appointmentdate
+        td = appointment.totalserviceprice
+        td = appointment.totalservicetime

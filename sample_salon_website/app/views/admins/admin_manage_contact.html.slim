@@ -1,0 +1,15 @@
+h1 管理者用 お問い合わせ管理ページ
+p
+  = link_to "ログアウト", admin_logout_service_path, method: :post
+p
+  = link_to "戻る", admin_account_path
+table
+  tr
+    td 氏名
+    td お問い合わせ内容
+    td Email
+  - @contact_info.each do |contact|
+    tr
+      td = "#{contact.lastname} #{contact.firstname}"
+      td = contact.message
+      td = contact.email

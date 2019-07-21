@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  servicename: MyString
+  servicetypename: MyString
+  serviceflg: 1
+  servicetime: 1
+
+two:
+  servicename: MyString
+  servicetypename: MyString
+  serviceflg: 1
+  servicetime: 1

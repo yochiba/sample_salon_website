@@ -1,0 +1,36 @@
+h1 予約する日時を選択してください。
+h3 = session[:appointment_staff]["staff_name"]
+.appointmentdate
+h1 テストweeklyカレンダー
+table
+  tr
+    th
+    - @appointment_calendar_hash[:week_days].each do |date|
+      th = date
+  - @appointment_calendar_hash[:display_time].each_with_index do |start_time, start_token_id|
+    tr
+      th = start_time
+      - @reserved_appointment_list.each_with_index do |appointment, date_id|
+        - if start_toekn_id == appointment.starttokenid
+          - if appointment.starttokenid.equal?(start_token_id) && appointment.displaydate.equal?(display_date)
+            td ×
+          - else
+            td = link_to "◯", appointment_date_service_path(date_id, display_date, start_time, start_token_id), method: :post
+
+
+      / - while date_id <= 6 do
+        / td = link_to "◯", appointment_date_service_path(date_id, "01/30(Sun)", start_time, start_token_id), method: :post
+        / - @reserved_appointment_list.each do |appointment|
+        /   - if appointment.starttokenid.equal?(start_token_id)
+        /     td ×
+        /   - else
+        /     td = link_to "◯", appointment_date_service_path(date_id, "01/30(Sun)", start_time, start_token_id), method: :post
+        / - date_id += 1
+        / td test
+        / - @reserved_appointment_list.zip(@appointment_calendar_hash[:week_days]) do |appointment, display_date|
+        /   - if appointment.starttokenid.equal?(start_token_id) && appointment.displaydate.equal?(display_date)
+        /     td ×
+        /   - else
+        /     td = link_to "◯", appointment_date_service_path(date_id, display_date, start_time, start_token_id), method: :post
+        / - date_id += 1
+= link_to "予約を取り消す", appointment_delete_service_path, method: :post

@@ -1,0 +1,19 @@
+h1 お客様情報入力フォーム
+.customer-info-form
+  = form_with url: appointment_customer_info_service_path, local: true do |f|
+    p
+      = f.label :姓
+    p
+      = f.text_field :lastname
+    p
+      = f.label :名
+    p
+      = f.text_field :firstname
+    p
+      = f.label :Email
+    p
+      = f.email_field :email
+    p
+      = f.submit "確認"
+
+= link_to "予約を取り消す", appointment_delete_service_path, method: :post

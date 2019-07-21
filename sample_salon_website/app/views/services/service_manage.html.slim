@@ -1,0 +1,20 @@
+h2 サービス管理ページ(ログイン中です: #{@admin_info.adminid})
+p
+  = link_to "ログアウト", admin_logout_service_path, method: :post
+p
+  = link_to "サービスを追加", service_add_path
+p
+  = link_to "戻る", admin_account_path
+
+h3 サービス検索
+= form_with model: @service_info, local: true do |f|
+  p
+    = f.text_field :keyword
+    = f.submit "検索"
+- if flash[:search_result]
+  = flash[:search_result]
+- if session[:service].present?
+  .service-result-box
+    - session[:service].each do |service|
+      p
+        = link_to "#{service}", service_edit_path(service)

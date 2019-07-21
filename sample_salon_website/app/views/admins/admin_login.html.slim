@@ -1,0 +1,13 @@
+h1 管理者用ログインページ
+
+= form_with model: @admin_info, local: true do |f|
+  p
+    = f.label :"管理者名"
+  p
+    = f.text_field :admin_id
+  p
+    = f.label :"パスワード"
+  p
+    = f.password_field :password
+  p
+    = f.submit "管理者ログイン"

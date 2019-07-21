@@ -1,0 +1,7 @@
+h1 このサービスを削除しますか？
+p 一度削除すると元に戻せません。
+.service_delete_container
+  .service-delete-yes
+    = link_to "はい", service_delete_service_path(@service_info.servicename), method: :post
+  .service-delete-no
+    = link_to "いいえ", service_edit_path(@service_info.servicename)

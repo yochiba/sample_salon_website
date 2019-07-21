@@ -1,0 +1,20 @@
+h1 Main#contact
+= form_with model: @contact_info, local: true do |f|
+  p
+    = f.label :"姓"
+  p
+    = f.text_field :lastname
+  p
+    = f.label :"名"
+  p
+    = f.text_field :firstname
+  p
+    = f.label :"Email"
+  p
+    = f.email_field :email
+  p
+    = f.label :"内容"
+  p
+    = f.text_area :message
+  p
+    = f.submit "送信"

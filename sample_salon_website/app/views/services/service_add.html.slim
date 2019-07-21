@@ -1,0 +1,37 @@
+h1 サービス追加ページ(サロン関係者用)
+p
+  = link_to "ログアウト", admin_logout_service_path, method: :post
+p
+  = link_to "サービス管理画面に戻る", service_manage_path
+.service-add-form
+  = form_with model: @service_info, local: true, multiple: true do |f|
+    p
+      = f.label :"サービス名(施述名)"
+    p
+      = f.text_field :service_name
+    p
+      = f.label :"サービスタイプ(施述タイプ)"
+    p
+      = f.text_field :service_type_name
+    p
+      = f.label :"サービスタイプ属性(施述タイプ属性)"
+    p
+      = f.number_field :service_flg
+    p
+      = f.label :"サービス時間(施述時間(分))"
+    p
+      = f.number_field :service_time
+    p
+      = f.label :"サービス値段(円)"
+    p
+      = f.number_field :service_price
+    p
+      = f.label :"サービスキーワード(検索時にヒットするキーワード)"
+    p
+      = f.text_field :service_keyword
+    p
+      = f.label :"サービス画像"
+    p
+      = f.file_field :service_image
+    p
+      = f.submit "サービス追加"

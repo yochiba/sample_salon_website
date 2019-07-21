@@ -1,0 +1,73 @@
+@charset "UTF-8";
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+
+
+ */
+/* line 19, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 24, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", YuGothic, "ヒラギノ角ゴ ProN W3", Hiragino Kaku Gothic ProN, Arial, "メイリオ", Meiryo, sans-serif;
+}
+
+/* line 28, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+ul {
+  list-style: none;
+}
+
+/* line 32, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+a {
+  text-decoration: none;
+}
+
+/* line 36, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+.header-container {
+  width: 100%;
+  height: 50px;
+  background-color: #f7ef99;
+}
+/* line 40, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+.header-container ul {
+  display: flex;
+  flex-direction: row;
+}
+/* line 44, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+.header-container ul li a {
+  display: block;
+  width: 150px;
+  height: 50px;
+  color: #000;
+  font-size: 16px;
+  text-align: center;
+  line-height: 50px;
+}
+/* line 52, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+.header-container ul li a:hover {
+  background-color: rgba(247, 142, 150, 0.5);
+  height: 47px;
+  border-bottom: solid 3px #fff;
+}
+
+/* line 62, /Users/yoshikazu/Git/sample_salon_website/sample_salon_website/app/assets/stylesheets/application.scss */
+.admin-login {
+  width: 100%;
+  height: 100px;
+  line-height: 100px;
+  background-color: #f7ef99;
+  text-align: center;
+}
