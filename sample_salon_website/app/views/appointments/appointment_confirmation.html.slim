@@ -5,6 +5,7 @@ table
     tr
       th = key
       td = appointment
-      
-= link_to "予約確定", appointment_confirmation_service_path, method: :post
-= link_to "予約を取り消す", appointment_delete_service_path, method: :post
+p
+  = link_to "予約確定", appointment_confirmation_service_path, method: :post
+p
+  = link_to "予約を取り消す", appointment_delete_service_path, method: :post

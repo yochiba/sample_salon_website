@@ -1,5 +1,11 @@
-/ このページはカスタマー側
-/ 画像追加
-h2 = "サービス名：#{@service_info.servicename}"
-img src="/service_images/#{@service_info.serviceimage}"
-= link_to "戻る", services_path
+.service-detail
+  .service-detail-container
+    h2 = "#{@service_info.servicename}"
+    .service-image
+      // TODO バックグラウンドイメージにするといいかも
+      img src="/service_images/#{@service_info.serviceimage}"
+    .description
+      h3 サービス説明
+      p ndlkwjdwqjdeiwfwjfefjbdb
+  = link_to "予約する(このサービスを予約する そのサービスを選択した状態にする)", services_path
+  = link_to "戻る", services_path

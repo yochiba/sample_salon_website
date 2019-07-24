@@ -1,8 +1,19 @@
-h1 サービス一覧
-.service-container
-  table
-    - @service_info.each do |service|
+.services
+  h2 サービス一覧
+  / = form_with model: @search_services, local: true do |f|
+  /   = f.text_field :keyword
+  /   = f.submit "検索"
+  // カテゴリーごとに表示できるようにする
+  .service-container
+    table
       tr
-        td = service.servicetypename
-        td = link_to "#{service.servicename}", service_detail_path(service.servicename)
-        td = "#{service.servicetime}分"
+        th サービスカテゴリー
+        th サービス内容
+        th 施術時間
+        th 金額
+      - @service_info.each do |service|
+        tr
+          td = service.servicetypename
+          td = link_to "#{service.servicename}", service_detail_path(service.servicename)
+          td = "#{service.servicetime}分"
+          td = "#{service.serviceprice}円"

@@ -6,7 +6,7 @@ class Appointment < ApplicationRecord
   validates :email, presence: true
   validates :servicename, presence: true
   validates :startdate, presence: true
-  validates :enddate, presence: true
+  validates :starttime, presence: true
   validates :staffid, presence: true
   validates :staffname, presence: true
   validates :totalservicetime, presence: true
@@ -25,28 +25,35 @@ class Appointment < ApplicationRecord
 
   # 予約メニュー選択処理
   # appointment_service_path
-  def get_appointment_service_list(service_name)
+  def get_appointment_service_list(service_name_list)
     appointment_service_list = []
     appointment_service_hash = {}
     noservice_flg = 0
     # サービスを選択せずに進んだ時の処理
-    if service_name.nil?
+    if service_name_list.nil?
       @services = Service.all()
       logger.info("[info]: サービスが選択されていません。")
       noservice_flg = 1
     end
     
     if noservice_flg == 0
-      logger.info("[info]: 選択されたサービスは#{service_name}です。")
+      logger.info("[info]: 選択されたサービスは#{service_name_list}です。")
       # 施術トークン計算用(DBには格納しない)
       total_service_time = 0
       # 合計施術トークン数
       total_token = 0
       total_service_price = 0
-      service_name.each do |service|
+      service_names = ""
+      service_name_list.each_with_index do |service, i|
         logger.info("[info]: servicenameは、#{service}です。")
         # サービスの合計施術時間と合計金額を計算
         service_info = Service.find_by(servicename: service)
+        # 予約確認画面等での表示フォーマット
+        if i == service_name_list.length - 1
+          service_names += "#{service_info.servicename}"
+        else
+          service_names += "#{service_info.servicename}, "
+        end
         total_service_time += service_info.servicetime
         total_service_price += service_info.serviceprice
         # 予約時間トークン数を計算
@@ -58,8 +65,9 @@ class Appointment < ApplicationRecord
       end
       logger.info("[info]: 合計の施術時間は#{total_service_time}分です。")
       logger.info("[info]: 合計金額は#{total_service_price}円です。")
+      
       # ハッシュに格納した予約情報をコントローラでセッションにする
-      appointment_service_hash[:service_names] = service_name
+      appointment_service_hash[:service_names] = service_names
       appointment_service_hash[:total_service_time] = total_service_time
       appointment_service_hash[:total_token] = total_token
       appointment_service_hash[:total_service_price] = total_service_price
@@ -126,17 +134,20 @@ class Appointment < ApplicationRecord
     end
     today = Date.today
     # この配列のインデックスは、date_idと同じ
-    week_days_list = []
+    date_list = []
+    display_date_list = []
     j = 0
     while j <= 6 do
-      week_day = Date.new(today.year, today.month, today.day + j)
-      str_week_day = week_day.strftime("%m/%d(%a)")
-      week_days_list.push(str_week_day)
+      date = Date.new(today.year, today.month, today.day + j)
+      str_date = date.strftime("%m/%d(%a)")
+      date_list.push(date)
+      display_date_list.push(str_date)
       j += 1
     end
     # カレンダー用
     appointment_calendar_hash = {
-      week_days: week_days_list,
+      display_date: display_date_list,
+      date: date_list,
       available_hour: available_hour_list,
       available_min: available_min_list,
       display_time: display_time_list
@@ -155,7 +166,7 @@ class Appointment < ApplicationRecord
     end
 
     appointments.each do |appointment|
-      logger.info("[Debug]: #{appointment.displaydate}")
+      logger.info("[Debug]: #{appointment.startdate}")
       reserved_appointment_list.push(appointment)
     end
     return reserved_appointment_list
@@ -165,8 +176,11 @@ class Appointment < ApplicationRecord
   def get_appointment_time_hash(date_id, display_date, start_time, start_token_id, total_token, staff_id)
     appointment_time_hash= {}
     today = Date.today
+    # FIXME　次の月をまたぐとエラーが発生する。
     # 予約日を取得
     appointment_date = Date.new(today.year, today.month, today.day + date_id.to_i)
+    # FIXME これ使えるかも 今月の最終日(未使用)
+    end_month_date = Date.new(today.year, today.month, -1)
     # 予約トークン数取得
     int_start_token_id = start_token_id.to_i
     logger.info("[info]: スタートトークンID: #{int_start_token_id}")
@@ -188,25 +202,35 @@ class Appointment < ApplicationRecord
     logger.info("[info]: #{end_hour}時#{end_min}分")
     logger.info("[info]: #{total_time}分")
 
-    appointment_start_time = DateTime.new(today.year, today.month, today.day + date_id.to_i, start_hour, start_min)
-    appointment_end_time = DateTime.new(today.year, today.month, today.day + date_id.to_i, end_hour, end_min)
-    display_start_time = appointment_start_time.strftime("%Y年%m月%d日(%a) %H:%M〜")
+    appointment_start_date = Date.new(today.year, today.month, today.day + date_id.to_i)
+    appointment_start_time = Time.new(today.year, today.month, today.day + date_id.to_i, start_hour, start_min)
+    # appointment_end_time = Time.new(today.year, today.month, today.day + date_id.to_i, end_hour, end_min)
+    display_start_date = appointment_start_date.strftime("%Y年%m月%d日(%a)")
+    display_start_time = appointment_start_time.strftime("%H:%M〜")
     
+    logger.info("[info]: 予約開始日#{appointment_start_date}")
     logger.info("[info]: 予約開始時間#{appointment_start_time}")
-    logger.info("[info]: 予約終了時間#{appointment_end_time}")
 
-    # 予約開始日時
-    appointment_time_hash[:start_date] = appointment_start_time
-    # 予約終了日時
-    appointment_time_hash[:end_date] = appointment_end_time
+    # 予約開始日
+    appointment_time_hash[:start_date] = appointment_start_date
+    # 予約開始時間
+    appointment_time_hash[:start_time] = appointment_start_time
+    # # 予約終了時間
+    # appointment_time_hash[:end_time] = appointment_end_time
     # 予約開始日付
     appointment_time_hash[:display_date] = display_date
-    # 予約開始日時(表示用)
-    appointment_time_hash[:display_start_date] = display_start_time
+    # 予約開始日(表示用)
+    appointment_time_hash[:display_start_date] = display_start_date
+    # 予約開始時(表示用)
+    appointment_time_hash[:display_start_time] = display_start_time
     # スタートトークンID
     appointment_time_hash[:start_token_id] = start_token_id
     # 合計サービス時間
     appointment_time_hash[:total_time] = total_time
+    # 今月の最終日
+    appointment_time_hash[:end_month_date] = end_month_date
+    logger.info("[DEBUG]: #{appointment_time_hash[:start_date]}")
+    logger.info("[DEBUG]: #{appointment_time_hash[:end_date]}")
     return appointment_time_hash
   end
 

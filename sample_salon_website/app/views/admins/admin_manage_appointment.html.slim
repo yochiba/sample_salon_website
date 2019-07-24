@@ -3,6 +3,22 @@ p
   = link_to "ログアウト", admin_logout_service_path, method: :post
 = link_to "戻る", admin_account_path
 
-h2 直近1週間の予約
-h2 週別
-h2 月別
+h2 直近の予約
+table
+  tr
+    th 予約内容
+    th 氏名
+    th Email
+    th 担当スタッフ
+    th 予約時間
+    th　施術時間
+  - @appointment_info.each do |appointment|
+    tr
+      td = appointment.servicename
+      td = "#{appointment.lastname} #{appointment.firstname}"
+      td = appointment.email
+      td = appointment.staffname
+      td = "#{appointment.displaystartdate} #{appointment.displaystarttime}"
+      td = "#{appointment.totalservicetime}分"
+
+// TODO 担当スタッフ別の予約管理表も欲しい

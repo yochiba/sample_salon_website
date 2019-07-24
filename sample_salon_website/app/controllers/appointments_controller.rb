@@ -1,3 +1,5 @@
+require 'date'
+
 class AppointmentsController < ApplicationController
   before_action :cheat_appointment_checker, {only: [
     :appointment_staff,
@@ -94,12 +96,12 @@ class AppointmentsController < ApplicationController
   end
 
   def appointment_date_service
-    # 予約スタート時間のトークンID
+    # 予約スタート時間のトークンID 
     start_token_id = params[:start_token_id]
     # 予約の合計トークン数
     total_token = session[:appointment_service]["total_token"]
     # 予約の日付
-    display_date = params[:display_date]
+    display_date = params[:date].to_date.strftime("%m/%d(%a)")
     # 今日から何日後か
     date_id = params[:date_id]
     # 予約スタート時間
@@ -107,7 +109,7 @@ class AppointmentsController < ApplicationController
     # 担当スタッフID
     staff_id = session[:appointment_staff]["staff_id"]
     
-    logger.info("[info]: staff_id: #{staff_id}, date:#{date} date_id:#{date_id}, start_time:#{start_time}, start_token_id:#{start_token_id}, total_token:#{total_token}")  
+    logger.info("[info]: staff_id: #{staff_id}, date:#{display_date} date_id:#{date_id}, start_time:#{start_time}, start_token_id:#{start_token_id}, total_token:#{total_token}")  
     appointment = Appointment.new
     appointment_time_hash = appointment.get_appointment_time_hash(date_id, display_date, start_time, start_token_id, total_token, staff_id)
     session[:appointment_date] = appointment_time_hash
@@ -124,14 +126,21 @@ class AppointmentsController < ApplicationController
   end
 
   def appointment_customer_info
-    
+    # ログイン済みユーザー判別処理
+    if session[:user_id]
+      @customer_info = Customer.find_by(userid: session[:user_id])
+    end
   end
 
   def appointment_customer_info_service
-
     appointment = Appointment.new
-    appointment_customer_hash = appointment.get_appointment_customer_hash(params[:firstname], params[:lastname], params[:email])
-
+    # ログイン済みユーザー判別処理
+    if session[:user_id]
+      customer_info = Customer.find_by(userid: session[:user_id])
+      appointment_customer_hash = appointment.get_appointment_customer_hash(customer_info.firstname, customer_info.lastname, customer_info.email)
+    else
+      appointment_customer_hash = appointment.get_appointment_customer_hash(params[:firstname], params[:lastname], params[:email])
+    end
     session[:appointment_customer] = appointment_customer_hash
 
     if session[:appointment_customer].present?
@@ -148,21 +157,22 @@ class AppointmentsController < ApplicationController
     @appointment_info_hash[:Email] = "#{session[:appointment_customer]["email"]}"
     @appointment_info_hash[:選択したメニュー] = "#{session[:appointment_service]["service_names"]}"
     @appointment_info_hash[:担当スタッフ] = "#{session[:appointment_staff]["staff_name"]}"
-    @appointment_info_hash[:予約日時] = "#{session[:appointment_date]["display_start_date"]}"
+    @appointment_info_hash[:予約日時] = "#{session[:appointment_date]["display_start_date"]} #{session[:appointment_date]["display_start_time"]}"
     @appointment_info_hash[:施術時間] = "#{session[:appointment_date]["total_time"]}分"
     @appointment_info_hash[:金額] = "#{session[:appointment_service]["total_service_price"]}円"
   end
 
   def appointment_confirmation_service
     logger.info("[info]: #{session[:appointment_customer]}")
-
+    logger.info("[info]100: #{session[:appointment_date]["start_date"]}")
     appointment_info = Appointment.new(
       firstname: session[:appointment_customer]["firstname"],
       lastname: session[:appointment_customer]["lastname"],
       email: session[:appointment_customer]["email"],
       servicename: session[:appointment_service]["service_names"],
       startdate: session[:appointment_date]["start_date"],
-      enddate: session[:appointment_date]["end_date"],
+      starttime: session[:appointment_date]["start_time"],
+      # endtime: session[:appointment_date]["end_time"],
       staffid: session[:appointment_staff]["staff_id"],
       staffname: session[:appointment_staff]["staff_name"],
       totalservicetime: session[:appointment_date]["total_time"],
@@ -170,9 +180,12 @@ class AppointmentsController < ApplicationController
       totaltoken: session[:appointment_service]["total_token"],
       starttokenid: session[:appointment_date]["start_token_id"],
       displaydate: session[:appointment_date]["display_date"],
+      displaystartdate: session[:appointment_date]["display_start_date"],
+      displaystarttime: session[:appointment_date]["display_start_time"]
     )
     if appointment_info.valid?
       appointment_info.save!
+      logger.info("[info]: #{session[:appointment_date]["start_date"]}")
       redirect_to appointment_complete_path
     else
       flash[:notice] = "予約に失敗しました。もう一度やり直してください。"

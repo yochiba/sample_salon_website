@@ -1,5 +1,3 @@
-require "customer.rb"
-
 class MainController < ApplicationController
   before_action :direct_login_checker, {only: [
     :account,
@@ -14,6 +12,13 @@ class MainController < ApplicationController
 
   def services
     @service_info = Service.all
+    # TODO サービス検索機能
+    # search_services = Service.where("servicekeyword LIKE ?", "%#{params[:keyword]}%")
+    # if search_services.present?
+
+    # else
+
+    # end
   end
 
   def appointment
@@ -25,7 +30,8 @@ class MainController < ApplicationController
       @customer_info = Customer.find_by(userid: session[:user_id])
       appointment_info = Appointment.where(
         firstname: "#{@customer_info.firstname}",
-        lastname: "#{@customer_info.lastname}"
+        lastname: "#{@customer_info.lastname}",
+        email: "#{@customer_info.email}"
       )
       @appointment_list = []
       appointment_info.each do |service|

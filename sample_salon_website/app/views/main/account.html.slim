@@ -4,13 +4,13 @@ h1 = "こんにちは、#{@customer_info.userid}さん！ログイン中です�
   h2 あなたの予約
   table.appointment-box
     tr
-      td あなたの予約
-      td 予約日時
-      td 値段
-      td 所要時間
+      th 予約内容
+      th 予約日時
+      th 値段
+      th 所要時間
     - @appointment_list.each do |appointment|
       tr
         td = appointment.servicename
-        td = appointment.appointmentdate
-        td = appointment.totalserviceprice
-        td = appointment.totalservicetime
+        td = "#{appointment.displaydate} #{appointment.displaystarttime}"
+        td = "#{appointment.totalserviceprice}円"
+        td = "#{appointment.totalservicetime}分"
