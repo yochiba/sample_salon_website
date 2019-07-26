@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   get '/admin_delete/:admin_id', to: 'admins#admin_delete', as: 'admin_delete'
   post '/admin_delete/:admin_id', to: 'admins#admin_delete_service', as: 'admin_delete_service'
   get '/admin_manage_appointment', to: 'admins#admin_manage_appointment', as: 'admin_manage_appointment'
+  post '/admin_manage_appointment/:appointment_id', to: 'admins#admin_manage_appointment_service', as: 'admin_manage_appointment_service'
   get '/admin_manage_contact', to: 'admins#admin_manage_contact', as: 'admin_manage_contact'
   post '/admin_logout', to: 'admins#admin_logout_service', as: 'admin_logout_service'
 
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
   get '/service_delete/:service_name', to: 'services#service_delete', as: 'service_delete'
   post '/service_delete/:service_name', to: 'services#service_delete_service', as: 'service_delete_service'
   get '/service_detail/:service_name', to: 'services#service_detail', as: 'service_detail'
+  get '/service_category/service_category', to: 'services#service_category', as: 'service_category'
 
   # appointment controller
   get '/appointment', to: 'appointments#appointment', as: 'appointment'
@@ -48,7 +50,7 @@ Rails.application.routes.draw do
   get '/appointment_staff', to: 'appointments#appointment_staff', as: 'appointment_staff'
   post '/appointment_staff', to: 'appointments#appointment_staff_service', as: 'appointment_staff_service'
   get '/appointment_date', to: 'appointments#appointment_date', as: 'appointment_date'
-  post '/appointment_date/:date_id/:date/:start_time/:start_token_id', to: 'appointments#appointment_date_service', as: 'appointment_date_service'
+  post '/appointment_date/:date_counter/:date/:start_time/:start_token_id', to: 'appointments#appointment_date_service', as: 'appointment_date_service'
   get '/appointment_customer_info', to: 'appointments#appointment_customer_info', as: 'appointment_customer_info'
   post '/appointment_customer_info', to: 'appointments#appointment_customer_info_service', as: 'appointment_customer_info_service'
   get '/appointment_confirmation', to: 'appointments#appointment_confirmation', as: 'appointment_confirmation'

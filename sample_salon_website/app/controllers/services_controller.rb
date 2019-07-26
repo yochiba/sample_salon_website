@@ -39,7 +39,7 @@ class ServicesController < ApplicationController
   def service_add_service
     service_info = Service.new(
       servicename: params[:service_name],
-      servicetypename: params[:service_type_name],
+      servicecategory: params[:service_category],
       serviceflg: params[:service_flg],
       servicetime: params[:service_time],
       serviceprice: params[:service_price],
@@ -96,6 +96,10 @@ class ServicesController < ApplicationController
 
   def service_detail
     @service_info = Service.find_by(servicename: params[:service_name])
+  end
+
+  def service_category
+    @service_category = Service.where(servicecategory: params[:service_category])
   end
 
   private

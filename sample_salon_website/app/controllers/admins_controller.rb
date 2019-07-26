@@ -140,7 +140,13 @@ class AdminsController < ApplicationController
   end
 
   def admin_manage_appointment
-    @appointment_info = Appointment.all
+    @appointment_info = Appointment.where(past_flg: 0).order(startdate: "DESC")
+  end
+
+  def admin_manage_appointment_service
+    appointment_info = Appointment.find_by(id: params[:appointment_id])
+    appointment_info.update(past_flg: 1)
+    redirect_to admin_manage_appointment_path
   end
 
   def admin_manage_contact

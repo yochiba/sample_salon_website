@@ -1,3 +1,45 @@
 // Place all the styles related to the appointments controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.appointment-calendar {
+  width:95%;
+  height: auto;
+  h3 {
+    text-align: center;
+    padding-top: 10px;
+  }
+  table {
+    width:80%;
+    margin: 20px auto 10px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    tr {
+      font-size: 16px;
+      line-height: 30px;
+      color: #333;
+      background-color: #F7EF98;
+      th {
+        border: solid 1px #fff;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+      td {
+        border: solid 1px #fff;
+        border-radius: 8px;
+        a {
+          display: block;
+          width: 100%;
+          height: 30px;
+          background-color: #F7EF98;
+          border-radius: 8px;
+          &:hover {
+            background-color: #ff7f58;
+          }
+        }
+      }
+      .reserved-box {
+        background-color: #ff7f58;
+      }
+    }
+  }
+}

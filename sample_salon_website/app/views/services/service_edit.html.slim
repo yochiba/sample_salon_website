@@ -1,6 +1,10 @@
-h2 = "サービス名: #{@service_info.servicename}"
-
-p このページはサービス情報編集ページ
+h3 = "#{@service_info.servicename}"
+.service-image
+  // TODO バックグラウンドイメージにするといいかも
+  img src="/service_images/#{@service_info.serviceimage}"
+  .description
+    h3 サービス説明
+    p ndlkwjdwqjdeiwfwjfefjbdb
 .service-delete
   = link_to "このサービスを削除", service_delete_path(@service_info.servicename)
 = link_to "戻る", service_manage_path

@@ -1,6 +1,4 @@
 h1 管理者用 予約管理ページ
-p
-  = link_to "ログアウト", admin_logout_service_path, method: :post
 = link_to "戻る", admin_account_path
 
 h2 直近の予約
@@ -11,7 +9,8 @@ table
     th Email
     th 担当スタッフ
     th 予約時間
-    th　施術時間
+    th 施術時間
+    th 完了
   - @appointment_info.each do |appointment|
     tr
       td = appointment.servicename
@@ -20,5 +19,6 @@ table
       td = appointment.staffname
       td = "#{appointment.displaystartdate} #{appointment.displaystarttime}"
       td = "#{appointment.totalservicetime}分"
+      td = link_to "完了", admin_manage_appointment_service_path(appointment.id), method: :post
 
 // TODO 担当スタッフ別の予約管理表も欲しい

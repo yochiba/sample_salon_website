@@ -7,13 +7,13 @@
   .services-container
     .services-sub-container
       .service-box
-        h3 カット
+        = link_to "カット", service_category_path("カット")
       .service-box
-        h3 パーマ
+        = link_to "パーマ", service_category_path("パーマ")
     .services-sub-container
       .service-box
-        h3 カラー
+        = link_to "カラー", service_category_path("カラー")
       .service-box
-        h3 その他
+        = link_to "その他", service_category_path("その他")
 .footer
   

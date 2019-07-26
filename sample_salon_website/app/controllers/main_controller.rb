@@ -27,17 +27,10 @@ class MainController < ApplicationController
 
   def account
     if session[:user_id]
-      @customer_info = Customer.find_by(userid: session[:user_id])
-      appointment_info = Appointment.where(
-        firstname: "#{@customer_info.firstname}",
-        lastname: "#{@customer_info.lastname}",
-        email: "#{@customer_info.email}"
-      )
-      @appointment_list = []
-      appointment_info.each do |service|
-        logger.info("[info]: #{service}")
-        @appointment_list.push(service)
-      end   
+      customer = Customer.new
+      @customer_info = customer.get_user_account(session[:user_id])
+      @appointment_list = customer.get_appointment_info(@customer_info.firstname, @customer_info.lastname, @customer_info.email)
+      @past_appointment_list = customer.get_past_appointment_info(@customer_info.firstname, @customer_info.lastname, @customer_info.email)
     end
   end
 

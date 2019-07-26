@@ -1,12 +1,10 @@
-h1 管理者用アカウントページ
-h2 = "管理者：#{@admin_info.adminid}さん、ログイン中です。"
+h2 管理者用アカウントページ
+h3 = "管理者：#{@admin_info.adminid}さん、ログイン中です。"
 p
-  = link_to "ログアウト", admin_logout_service_path, method: :post
+  = link_to "予約管理", admin_manage_appointment_path
 p
-  = link_to "予約管理ページ", admin_manage_appointment_path
+  = link_to "お問い合わせ管理", admin_manage_contact_path
 p
-  = link_to "お問い合わせ管理ページ", admin_manage_contact_path
-p
-  = link_to "サービス管理ページ", service_manage_path
+  = link_to "サービス管理", service_manage_path
 p
   = link_to "管理者一覧", admin_manage_path

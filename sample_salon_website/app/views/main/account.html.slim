@@ -6,11 +6,28 @@ h1 = "こんにちは、#{@customer_info.userid}さん！ログイン中です�
     tr
       th 予約内容
       th 予約日時
+      th 担当スタッフ
       th 値段
       th 所要時間
     - @appointment_list.each do |appointment|
       tr
         td = appointment.servicename
         td = "#{appointment.displaydate} #{appointment.displaystarttime}"
+        td = appointment.staffname
+        td = "#{appointment.totalserviceprice}円"
+        td = "#{appointment.totalservicetime}分"
+  h2 過去の予約
+  table.appointment-box
+    tr
+      th 予約内容
+      th 予約日時
+      th 担当スタッフ
+      th 値段
+      th 所要時間
+    - @past_appointment_list.each do |appointment|
+      tr
+        td = appointment.servicename
+        td = "#{appointment.displaydate} #{appointment.displaystarttime}"
+        td = appointment.staffname
         td = "#{appointment.totalserviceprice}円"
         td = "#{appointment.totalservicetime}分"

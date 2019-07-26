@@ -1,7 +1,5 @@
 h2 サービス管理ページ(ログイン中です: #{@admin_info.adminid})
 p
-  = link_to "ログアウト", admin_logout_service_path, method: :post
-p
   = link_to "サービスを追加", service_add_path
 p
   = link_to "戻る", admin_account_path

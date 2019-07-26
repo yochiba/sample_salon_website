@@ -55,4 +55,38 @@ class Customer < ApplicationRecord
     login_check_hash[:flash_message] = flash_message
     return login_check_hash
   end
+
+  # ユーザーアカウント情報取得処理
+  def get_user_account(user_id)
+    customer_info = Customer.find_by(userid: user_id)
+    return customer_info
+  end
+
+  # ユーザーアカウント内で新規の予約情報を取得する
+  def get_appointment_info(firstname, lastname, email)
+    appointment_info = Appointment.where(
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      past_flg: 0
+    )
+    return appointment_info
+  end
+
+  # ユーザーアカウント内で過去の予約情報を取得する
+  def get_past_appointment_info(firstname, lastname, email)
+    past_appointment_list = Appointment.where( 
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      past_flg: 1
+      ).order(startdate: :DESC).limit 5
+    
+    if past_appointment_list.present?
+      return past_appointment_list
+    else
+      message = "過去の予約はございません。"
+      return message
+    end
+  end
 end

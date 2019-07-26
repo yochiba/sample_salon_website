@@ -22,6 +22,12 @@ class Appointment < ApplicationRecord
   @@business_close_hour = 19
   # トークン単位(30分/1トークン)
   @@token_icon = 30
+  # 一月の日数(30日分)
+  @@monthly_dates = 30
+  # 1月
+  @@january = 1
+  # 12月
+  @@december = 12
 
   # 予約メニュー選択処理
   # appointment_service_path
@@ -133,17 +139,95 @@ class Appointment < ApplicationRecord
       end
     end
     today = Date.today
-    # この配列のインデックスは、date_idと同じ
+    # この配列のインデックスは、date_counterと同じ
     date_list = []
     display_date_list = []
-    j = 0
-    while j <= 6 do
-      date = Date.new(today.year, today.month, today.day + j)
-      str_date = date.strftime("%m/%d(%a)")
-      date_list.push(date)
-      display_date_list.push(str_date)
-      j += 1
+    first_month_end = Date.new(today.year, today.month, -1)
+    
+    # 来月が新年ならフラグON
+    new_year_flg = false
+    if today.month == 12
+      new_year_flg = true
     end
+    # 当月の日付を取得
+    first_month_date_counter = 0
+    while first_month_date_counter <= @@monthly_dates do
+      first_month_date = Date.new(today.year, today.month, today.day + first_month_date_counter)
+      str_date = first_month_date.strftime("%m/%d(%a)")
+      date_list.push(first_month_date)
+      display_date_list.push(str_date)
+      if first_month_end.day == first_month_date.day
+        new_year_flg = false
+        break
+      end
+      first_month_date_counter += 1
+    end
+
+    second_month_date_counter = 0
+    while second_month_date_counter <= @@monthly_dates do
+      if new_year_flg
+        second_month_date = Date.new(today.year + 1, @@january, 1 + second_month_date_counter)
+        second_month_end = Date.new(today.year + 1, @@january, -1)
+      else
+        second_month_date = Date.new(today.year, today.month + 1, 1 + second_month_date_counter)
+        second_month_end = Date.new(today.year, today.month + 1, -1)
+      end
+      str_date = second_month_date.strftime("%m/%d(%a)")
+      date_list.push(second_month_date)
+      display_date_list.push(str_date)
+      if second_month_end.day == second_month_date.day
+        if second_month_date.month == @@december
+          new_year_flg = true
+        else
+          new_year_flg = false
+        end
+        break
+      end
+      second_month_date_counter += 1
+    end
+
+    third_month_date_counter = 0
+    while third_month_date_counter <= @@monthly_dates do
+      if new_year_flg
+        third_month_date = Date.new(today.year + 1, @@january, 1 + third_month_date_counter)
+        third_month_end = Date.new(today.year + 1, @@january, -1)
+      else
+        third_month_date = Date.new(today.year, today.month + 2, 1 + third_month_date_counter)
+        third_month_end = Date.new(today.year, today.month + 2, -1)
+      end
+      str_date = third_month_date.strftime("%m/%d(%a)")
+      date_list.push(third_month_date)
+      display_date_list.push(str_date)
+      if third_month_end.day == third_month_date.day
+        if second_month_date.month == @@december
+          new_year_flg = true
+        else
+          new_year_flg = false
+        end
+        break
+      end
+      third_month_date_counter += 1
+    end
+
+    fourth_month_date_counter = 0
+    while fourth_month_date_counter <= @@monthly_dates do
+      if new_year_flg
+        fourth_month_date = Date.new(today.year + 1, @@january, 1 + fourth_month_date_counter)
+        fourth_month_end = Date.new(today.year + 1, @@january, -1)
+      else
+        fourth_month_date = Date.new(today.year, today.month + 3, 1 + fourth_month_date_counter)
+        fourth_month_end = Date.new(today.year, today.month + 3, -1)
+      end
+      str_date = fourth_month_date.strftime("%m/%d(%a)")
+      date_list.push(fourth_month_date)
+      display_date_list.push(str_date)
+      if fourth_month_end.day == fourth_month_date.day
+        new_year_flg = false
+        break
+      end
+      fourth_month_date_counter += 1
+    end
+
     # カレンダー用
     appointment_calendar_hash = {
       display_date: display_date_list,
@@ -173,14 +257,9 @@ class Appointment < ApplicationRecord
   end
 
 
-  def get_appointment_time_hash(date_id, display_date, start_time, start_token_id, total_token, staff_id)
-    appointment_time_hash= {}
-    today = Date.today
-    # FIXME　次の月をまたぐとエラーが発生する。
+  def get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
     # 予約日を取得
-    appointment_date = Date.new(today.year, today.month, today.day + date_id.to_i)
-    # FIXME これ使えるかも 今月の最終日(未使用)
-    end_month_date = Date.new(today.year, today.month, -1)
+    appointment_start_date = date.to_date
     # 予約トークン数取得
     int_start_token_id = start_token_id.to_i
     logger.info("[info]: スタートトークンID: #{int_start_token_id}")
@@ -202,23 +281,20 @@ class Appointment < ApplicationRecord
     logger.info("[info]: #{end_hour}時#{end_min}分")
     logger.info("[info]: #{total_time}分")
 
-    appointment_start_date = Date.new(today.year, today.month, today.day + date_id.to_i)
-    appointment_start_time = Time.new(today.year, today.month, today.day + date_id.to_i, start_hour, start_min)
-    # appointment_end_time = Time.new(today.year, today.month, today.day + date_id.to_i, end_hour, end_min)
+    appointment_start_time = Time.new(appointment_start_date.year, appointment_start_date.month, appointment_start_date.day, start_hour, start_min)
     display_start_date = appointment_start_date.strftime("%Y年%m月%d日(%a)")
     display_start_time = appointment_start_time.strftime("%H:%M〜")
     
     logger.info("[info]: 予約開始日#{appointment_start_date}")
     logger.info("[info]: 予約開始時間#{appointment_start_time}")
 
+    appointment_time_hash= {}
     # 予約開始日
     appointment_time_hash[:start_date] = appointment_start_date
     # 予約開始時間
     appointment_time_hash[:start_time] = appointment_start_time
-    # # 予約終了時間
-    # appointment_time_hash[:end_time] = appointment_end_time
     # 予約開始日付
-    appointment_time_hash[:display_date] = display_date
+    appointment_time_hash[:display_date] = appointment_start_date.strftime("%m/%d(%a)")
     # 予約開始日(表示用)
     appointment_time_hash[:display_start_date] = display_start_date
     # 予約開始時(表示用)
@@ -227,8 +303,6 @@ class Appointment < ApplicationRecord
     appointment_time_hash[:start_token_id] = start_token_id
     # 合計サービス時間
     appointment_time_hash[:total_time] = total_time
-    # 今月の最終日
-    appointment_time_hash[:end_month_date] = end_month_date
     logger.info("[DEBUG]: #{appointment_time_hash[:start_date]}")
     logger.info("[DEBUG]: #{appointment_time_hash[:end_date]}")
     return appointment_time_hash

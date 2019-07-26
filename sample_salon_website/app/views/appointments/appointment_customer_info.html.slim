@@ -23,5 +23,7 @@ h1 お客様情報入力フォーム
         = f.email_field :email
       p
         = f.submit "確認"
-
-= link_to "予約を取り消す", appointment_delete_service_path, method: :post
+p
+  = link_to "予約日時の選択へ戻る", appointment_date_path
+p
+  = link_to "予約を取り消す", appointment_delete_service_path, method: :post

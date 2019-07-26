@@ -101,17 +101,17 @@ class AppointmentsController < ApplicationController
     # 予約の合計トークン数
     total_token = session[:appointment_service]["total_token"]
     # 予約の日付
-    display_date = params[:date].to_date.strftime("%m/%d(%a)")
+    date = params[:date]
     # 今日から何日後か
-    date_id = params[:date_id]
+    date_counter = params[:date_counter]
     # 予約スタート時間
     start_time = params[:start_time]
     # 担当スタッフID
     staff_id = session[:appointment_staff]["staff_id"]
     
-    logger.info("[info]: staff_id: #{staff_id}, date:#{display_date} date_id:#{date_id}, start_time:#{start_time}, start_token_id:#{start_token_id}, total_token:#{total_token}")  
+    logger.info("[info]: staff_id: #{staff_id}, date:#{date} date_counter:#{date_counter}, start_time:#{start_time}, start_token_id:#{start_token_id}, total_token:#{total_token}")  
     appointment = Appointment.new
-    appointment_time_hash = appointment.get_appointment_time_hash(date_id, display_date, start_time, start_token_id, total_token, staff_id)
+    appointment_time_hash = appointment.get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
     session[:appointment_date] = appointment_time_hash
 
     if session[:appointment_date].present?
@@ -172,7 +172,6 @@ class AppointmentsController < ApplicationController
       servicename: session[:appointment_service]["service_names"],
       startdate: session[:appointment_date]["start_date"],
       starttime: session[:appointment_date]["start_time"],
-      # endtime: session[:appointment_date]["end_time"],
       staffid: session[:appointment_staff]["staff_id"],
       staffname: session[:appointment_staff]["staff_name"],
       totalservicetime: session[:appointment_date]["total_time"],
@@ -181,7 +180,8 @@ class AppointmentsController < ApplicationController
       starttokenid: session[:appointment_date]["start_token_id"],
       displaydate: session[:appointment_date]["display_date"],
       displaystartdate: session[:appointment_date]["display_start_date"],
-      displaystarttime: session[:appointment_date]["display_start_time"]
+      displaystarttime: session[:appointment_date]["display_start_time"],
+      past_flg: 0
     )
     if appointment_info.valid?
       appointment_info.save!

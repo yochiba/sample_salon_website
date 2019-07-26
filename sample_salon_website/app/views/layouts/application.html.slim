@@ -8,20 +8,39 @@ html
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
   body
-    .header-container
-        ul
-          li 
-            = link_to "ホーム", home_path
-          li 
-            = link_to "当サロンについて", about_path
-          li 
-            = link_to "サービス一覧", services_path
-          li
-            = link_to "ご予約", appointment_path
-          li 
-            = link_to "お問い合わせ", contact_path
-          li 
-            = link_to "マイページ", login_path
+    - if !session[:admin_id]
+      .header-container
+          ul
+            li 
+              = link_to "ホーム", home_path
+            li 
+              = link_to "当サロンについて", about_path
+            li 
+              = link_to "サービス一覧", services_path
+            li
+              = link_to "ご予約", appointment_path
+            li 
+              = link_to "お問い合わせ", contact_path
+            li 
+              = link_to "マイページ", login_path
+            - if session[:user_id]
+              li 
+                = link_to "ログアウト", logout_service_path, method: :post
+    - else
+      .header-container
+          ul
+            li 
+              = link_to "管理者HOME", admin_account_path
+            li 
+              = link_to "予約管理", admin_manage_appointment_path
+            li 
+              = link_to "お問い合わせ管理", admin_manage_contact_path
+            li 
+              = link_to "サービス管理", service_manage_path
+            li
+              = link_to "管理者一覧", admin_manage_path
+            li 
+              = link_to "ログアウト", admin_logout_service_path, method: :post
     - if flash[:notice]
       .flash-notice  
         = flash[:notice]

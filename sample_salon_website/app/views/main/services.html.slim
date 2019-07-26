@@ -13,7 +13,7 @@
         th 金額
       - @service_info.each do |service|
         tr
-          td = service.servicetypename
-          td = link_to "#{service.servicename}", service_detail_path(service.servicename)
+          td = service.servicecategory
+          td = link_to "#{service.servicecategory}", service_detail_path(service.servicecategory)
           td = "#{service.servicetime}分"
           td = "#{service.serviceprice}円"

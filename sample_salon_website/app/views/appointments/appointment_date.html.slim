@@ -1,35 +1,37 @@
-h1 予約する日時を選択してください。
-h3 = session[:appointment_staff]["staff_name"]
-.appointmentdate
-h1 テストweeklyカレンダー
-table
-  tr
-  - first_flg = true
-  - @appointment_calendar_hash[:display_time].each_with_index do |start_time, start_token_id|
-    th
-    - date_list = []
-    - @appointment_calendar_hash[:date].zip(@appointment_calendar_hash[:display_date]) do |date, display_date|  
-      - if first_flg
-        th = display_date
-      - date_list.push(date)
-    - first_flg = false
+.appointment-calendar
+  h3 = "予約日時の選択 (担当スタッフ：#{session[:appointment_staff]["staff_name"]})"
+  table
     tr
-      th = start_time
-      - display_date = nil
-      - date_id = 0
-      - while date_id <= 6 do
-        - check_date = date_list[date_id]
-        - reserved_flg = false
-        // FIXME 下記の@reserved_appointment_listでtotaltokenを取得してトークン分は予約を埋める。
-        - @reserved_appointment_list.each do |appointment|
-          - if start_token_id == appointment.starttokenid && appointment.startdate == check_date
-            - reserved_flg = true
-        - if reserved_flg
-          td ×
-        - else
-          td = link_to "○", appointment_date_service_path(date_id, check_date, start_time, start_token_id), method: :post
-        - date_id += 1
-= link_to "予約を取り消す", appointment_delete_service_path, method: :post
-
-// FIXME 月を跨いでもエラーにならないようにする
+    - first_flg = true
+    - @appointment_calendar_hash[:display_time].each_with_index do |start_time, start_token_id|
+      th
+      - date_list = []
+      - i = 0
+      - @appointment_calendar_hash[:date].zip(@appointment_calendar_hash[:display_date]) do |date, display_date|  
+        - if first_flg
+          th = display_date
+        - date_list.push(date)
+        // 下記はテスト用のbreak
+        - if i == 7
+          - break
+        - i += 1
+      - first_flg = false
+      tr
+        th = start_time
+        - display_date = nil
+        - date_counter = 0
+        // - while date_counter < date_list.length do
+        - while date_counter < 8 do
+          - check_date = date_list[date_counter]
+          - reserved_flg = false
+          // FIXME 下記の@reserved_appointment_listでtotaltokenを取得してトークン分は予約を埋める。
+          - @reserved_appointment_list.each.each do |appointment|
+            - if start_token_id == appointment.starttokenid && appointment.startdate == check_date || check_date.wday == 2
+              - reserved_flg = true
+          - if reserved_flg
+            td.reserved-box
+          - else
+            td = link_to "", appointment_date_service_path(date_counter, check_date, start_time, start_token_id), method: :post
+          - date_counter += 1
+  = link_to "予約を取り消す", appointment_delete_service_path, method: :post
 // FIXME カレンダー表示の修正および、コントローラで処理を行う
