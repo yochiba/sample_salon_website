@@ -5,16 +5,16 @@
   table
     tr
     - first_flg = true
-    - @appointment_calendar_hash[:display_time].each_with_index do |start_time, start_token_id|
+    - @business_hour_hash[:display_time].each_with_index do |start_time, start_token_id|
       th
       - date_list = []
       - i = 0
-      - @appointment_calendar_hash[:date].zip(@appointment_calendar_hash[:display_date]) do |date, display_date|  
+      - @dates_hash[:date].zip(@dates_hash[:display_date]) do |date, display_date|  
         - if first_flg
           th = display_date
         - date_list.push(date)
         // 一度に表示できる日数+1
-        - if i == 7
+        - if i == 6
           - break
         - i += 1
       - first_flg = false
@@ -22,7 +22,6 @@
         th = start_time
         - display_date = nil
         - date_counter = 0
-        // - while date_counter < date_list.length do
         - while date_counter < date_list.length do
           - check_date = date_list[date_counter]
           - reserved_flg_staff = false
@@ -31,19 +30,12 @@
           - if check_date.wday == 2
             - close_day_flg = true
           // FIXME 下記の@reserved_appointment_listでtotaltokenを取得してトークン分は予約を埋める。
-          - @reserved_appointment_list.each do |appointment|
-            / これが既存の処理
-            - if appointment.startdate == check_date && start_token_id == appointment.starttokenid
-              - reserved_flg_staff = true
-            / - if appointment.startdate == check_date
-            /   - if start_token_id == appointment.starttokenid
-            /     - reserved_flg_staff = true
-            /   - counter = start_token_id
-            /   - while counter <= appointment.starttokenid + appointment.totaltoken do
-            /     - reserved_flg_staff = true
-            /     - counter += 1
-            / - if 
-            /   - reserved_flg_nostaff = true
+          - if @daily_tokens_flg_hash["#{check_date}"].present?
+            - @daily_tokens_flg_hash["#{check_date}"].each do |tokens_flg|
+              - if tokens_flg[start_token_id] == 1
+                - reserved_flg_staff = true
+              / - if 
+              /   - reserved_flg_nostaff = true
           - if close_day_flg || reserved_flg_staff || reserved_flg_nostaff
             td.reserved-box
           - else
@@ -51,6 +43,4 @@
           - date_counter += 1
   = link_to "予約を取り消す", appointment_delete_service_path, method: :post
 // FIXME カレンダー表示の修正および、コントローラで処理を行う
-// FIXME || session[:appointment_date]["token_ids"].include?(start_token_id)
 // FIXME 指名なしの場合、とりあえずスタッフ全員の予約状況を確認して、空きがなければ×
-

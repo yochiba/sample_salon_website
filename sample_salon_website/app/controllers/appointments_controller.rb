@@ -79,12 +79,16 @@ class AppointmentsController < ApplicationController
       logger.info("[info]: 現在の予約状況は、#{current_action_session}です。")
     end
     appointment = Appointment.new
-    # すでに予約が入っている時間を取得する処理
+    # 営業時間を取得する処理
+    @business_hour_hash = appointment.get_business_hour_hash
+    # 3ヶ月分の日付を取得する
+    @dates_hash = appointment.generate_dates_hash
+    # 既存の予約情報を取得
     @reserved_appointment_list = appointment.check_appointment(session[:appointment_staff]["staff_id"])
-
-    # カレンダーを取得する処理
-    @appointment_calendar_hash = appointment.get_appointment_calendar_hash
-    # logger.info("[Debug]: #{@appointment_calendar_hash}")
+    # カレンダーに予約済み範囲の取得(スタッフ選択時)
+    @daily_tokens_flg_hash = appointment.token_caliculator(@reserved_appointment_list, @business_hour_hash[:display_time])
+    # FIXME トータルトークンと空きを比較して、キャパオーバーならreservedにする処理
+    
   end
 
   def appointment_date_service

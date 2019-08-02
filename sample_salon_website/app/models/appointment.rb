@@ -119,7 +119,8 @@ class Appointment < ApplicationRecord
     return appointment_staff_list
   end
 
-  def get_appointment_calendar_hash
+  # カレンダーで使用する営業時間を生成取得する処理
+  def get_business_hour_hash
     available_hour_list = []
     available_min_list = [0, 30]
     display_time_list = []
@@ -145,6 +146,18 @@ class Appointment < ApplicationRecord
         i += 1
       end
     end
+    # カレンダー用
+    business_hour_hash = {
+      available_hour: available_hour_list,
+      available_min: available_min_list,
+      display_time: display_time_list
+    }
+    logger.info("[Debug]: #{business_hour_hash}")
+    return business_hour_hash
+  end
+
+  # カレンダーで使用する日付を生成取得する処理
+  def generate_dates_hash
     # 当日の日付を取得
     today = Date.today
     # 日付情報および表示用日付の格納配列
@@ -198,32 +211,71 @@ class Appointment < ApplicationRecord
       end
       month_counter += 1
     end
-
-    # カレンダー用
-    appointment_calendar_hash = {
+    dates_hash = {
       display_date: display_date_list,
-      date: date_list,
-      available_hour: available_hour_list,
-      available_min: available_min_list,
-      display_time: display_time_list
+      date: date_list
     }
-    logger.info("[Debug]: #{appointment_calendar_hash}")
-    return appointment_calendar_hash
+    return dates_hash
   end
+
 
   # スタッフの空き情報をカレンダーに反映する処理
   def check_appointment(staff_id)
     reserved_appointment_hash = {}
     reserved_appointment_list = []
     if staff_id == 0
-      reserved_appointment_list = Appointment.all
+      reserved_appointment_list = Appointment.where(past_flg: 0)
     else
-      reserved_appointment_list = Appointment.where(staffid: staff_id)
+      reserved_appointment_list = Appointment.where(staffid: staff_id, past_flg: 0)
     end
-    
-
     return reserved_appointment_list
   end
+
+  # 各予約の予約済トークン計算処理(スタッフ選択時)
+  def token_caliculator(reserved_appointment_list, token_length_list)
+    list_length = token_length_list.length
+    # 日付ごとのトークンフラグハッシュ
+    daily_tokens_flg_hash = {}
+    reserved_appointment_list.each do |appointment|
+      # 予約済みトークン -> 1, 空き -> 0
+      token_list = []
+      i = 0
+      while i < list_length do
+        token_list.push(0)
+        i += 1
+      end
+      logger.info("[DEBUG]:::: #{token_list}")
+      start_token_id = appointment.starttokenid
+      total_token = appointment.totaltoken
+      end_token_id = start_token_id + total_token - 1
+      j = start_token_id
+      while j <= end_token_id do
+        token_list[j] = 1
+        j += 1
+      end
+      start_date = appointment.startdate.to_s
+      if !daily_tokens_flg_hash.keys.include?(start_date)
+        # daily_tokens_flg_hashのvalue
+        daily_list = []
+        daily_list.push(token_list)
+        daily_tokens_flg_hash.store(start_date, daily_list)        
+      else
+        value_list = daily_tokens_flg_hash["#{start_date}"]
+        value_list.push(token_list)
+        daily_tokens_flg_hash.store(start_date, value_list)
+      end
+    end
+    logger.info("[DEBUG]:::: #{daily_tokens_flg_hash}")
+    return daily_tokens_flg_hash
+  end
+
+  # 新規予約と既存予約のtotal_tokenを比較して、カレンダー上に反映
+  # def compare_total_token?(daily_tokens_flg_hash, total_token)
+  #   daily_tokens_flg_hash
+
+
+  #   return flg 
+  # end
 
   # 予約日時を計算および構築する処理
   def get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
@@ -235,7 +287,7 @@ class Appointment < ApplicationRecord
     end_token = int_start_token_id + int_total_token
     total_time = (end_token - int_start_token_id) * @@TOKEN_ICON
     # 使用するトークンID全てを格納する
-    token_ids = (start_token_id.to_i..(int_start_token_id + int_total_token)).to_a
+    # token_ids = (start_token_id.to_i..(int_start_token_id + int_total_token)).to_a
     
     # 予約開始時間(時)
     start_hour = start_time[0, 2].to_i
