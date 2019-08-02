@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_144834) do
+ActiveRecord::Schema.define(version: 2019_08_01_164722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,13 +72,13 @@ ActiveRecord::Schema.define(version: 2019_07_26_144834) do
   create_table "services", force: :cascade do |t|
     t.string "servicename", null: false
     t.string "servicecategory", null: false
-    t.integer "serviceflg", default: 0, null: false
     t.integer "servicetime", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "servicekeyword", null: false
     t.integer "serviceprice", null: false
     t.string "serviceimage", default: "default.jpg"
+    t.text "description", default: "説明はありません", null: false
   end
 
   create_table "staffs", force: :cascade do |t|

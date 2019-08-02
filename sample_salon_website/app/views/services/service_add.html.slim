@@ -7,14 +7,11 @@ p
       = f.label :"サービス名(施述名)"
     p
       = f.text_field :service_name
-    p
-      = f.label :"サービスタイプ(施述タイプ)"
-    p
-      = f.text_field :service_category
-    p
-      = f.label :"サービスタイプ属性(施述タイプ属性)"
-    p
-      = f.number_field :service_flg
+    p サービスカテゴリー
+    - @service_category_list.each do |category|
+      .category-info
+        = f.radio_button :service_category, "#{category}"
+        = f.label :" #{category}"
     p
       = f.label :"サービス時間(施述時間(分))"
     p
@@ -27,6 +24,10 @@ p
       = f.label :"キーワード(検索時にヒットするキーワード)"
     p
       = f.text_field :service_keyword
+    p
+      = f.label :"詳細説明"
+    p
+      = f.text_area :service_description
     p
       = f.label :"サービス画像"
     p

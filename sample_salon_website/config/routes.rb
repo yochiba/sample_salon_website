@@ -22,7 +22,7 @@ Rails.application.routes.draw do
   get '/admin_add', to: 'admins#admin_add', as: 'admin_add'
   post '/admin_add', to: 'admins#admin_add_service', as: 'admin_add_service'
   get '/admin_edit/:admin_id', to: 'admins#admin_edit', as: 'admin_edit'
-  put '/admin_edit/:admin_id', to: 'admins#admin_edit_service', as: 'admin_edit_service'
+  post '/admin_edit/:admin_id', to: 'admins#admin_edit_service', as: 'admin_edit_service'
   get '/admin_edit_confirmation/:admin_id', to: 'admins#admin_edit_confirmation', as: 'admin_edit_confirmation'
   put '/admin_edit_confirmation/:admin_id', to: 'admins#admin_edit_confirmation_service', as: 'admin_edit_confirmation_service'
   get '/admin_delete/:admin_id', to: 'admins#admin_delete', as: 'admin_delete'
@@ -42,13 +42,13 @@ Rails.application.routes.draw do
   get '/service_delete/:service_name', to: 'services#service_delete', as: 'service_delete'
   post '/service_delete/:service_name', to: 'services#service_delete_service', as: 'service_delete_service'
   get '/service_detail/:service_name', to: 'services#service_detail', as: 'service_detail'
-  get '/service_category/service_category', to: 'services#service_category', as: 'service_category'
+  get '/service_category/:service_category', to: 'services#service_category', as: 'service_category'
 
   # appointment controller
   get '/appointment', to: 'appointments#appointment', as: 'appointment'
   post '/appointment', to: 'appointments#appointment_service', as: 'appointment_service'
   get '/appointment_staff', to: 'appointments#appointment_staff', as: 'appointment_staff'
-  post '/appointment_staff', to: 'appointments#appointment_staff_service', as: 'appointment_staff_service'
+  post '/appointment_staff/:staff_id', to: 'appointments#appointment_staff_service', as: 'appointment_staff_service'
   get '/appointment_date', to: 'appointments#appointment_date', as: 'appointment_date'
   post '/appointment_date/:date_counter/:date/:start_time/:start_token_id', to: 'appointments#appointment_date_service', as: 'appointment_date_service'
   get '/appointment_customer_info', to: 'appointments#appointment_customer_info', as: 'appointment_customer_info'
@@ -58,9 +58,4 @@ Rails.application.routes.draw do
   get '/appointment_complete', to: 'appointments#appointment_complete', as: 'appointment_complete'
   post '/appointment_delete', to: 'appointments#appointment_delete_service', as: 'appointment_delete_service'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-
-  get '/test', to: 'main#test', as: 'test'
-  post '/test/:date_id/:youbi_id/:week_id', to: 'main#test_service', as: 'test_service'
-  get '/test_2/:date_id/:youbi_id/:week_id', to: 'main#test_2', as: 'test_2'
-
 end

@@ -1,6 +1,72 @@
 // Place all the styles related to the appointments controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+.appointment {
+  color:  #f5f6fa;
+  width: 80%;
+  height: auto;
+  margin: 30px auto;
+  padding: 20px 0;
+  background-color: rgba($color: #333, $alpha: 0.4);
+  h2 {
+    text-align: center; 
+  }
+  form {
+    width: 90%;
+    height: auto;
+    margin: 10px auto;
+    padding: 10px 0;
+    .submit-btn {
+      display: block;
+      width: 35%;
+      height: 40px;
+      background-color: transparent;
+      margin: 20px auto 10px;
+      border: solid 1px #f5f6fa;
+      font-size: 15px;
+      color: #f5f6fa;
+      &:hover {
+        background-color: rgba($color: #333, $alpha: 0.4);
+        color: #f5f6fa;
+      }
+    }
+    table {
+      width: 90%;
+      height: auto;
+      margin: 0 auto;
+      .service-name {
+        text-align: left;
+        width: 25%; 
+      }
+      td {
+        text-align: center;
+        font-size: 17px;
+        line-height: 40px;
+        width: 35%;
+        border-bottom: solid 1px #333;
+      }
+    }
+  }
+
+  a {
+    display: block;
+    width: 30%;
+    height: 70px;
+    background-color: transparent;
+    border: solid 2px ;
+    margin: 20px auto;
+    font-size: 20px;
+    text-align: center;
+    line-height: 70px;
+    color: #E1E3E4;
+    &:hover {
+      background-color: rgba($color: #333, $alpha: 0.5);
+      color: #E1E3E4;
+    }
+  }
+}
+
+
 .appointment-calendar {
   width:95%;
   height: auto;
@@ -14,31 +80,31 @@
     border-collapse: collapse;
     border-spacing: 0;
     tr {
-      font-size: 16px;
-      line-height: 30px;
-      color: #333;
-      background-color: #F7EF98;
+      color: #E1E3E4;
+      background-color: rgba($color: #333, $alpha: 0.5);
       th {
+        line-height: 30px;
+        font-weight: normal;
         border: solid 1px #fff;
         border-radius: 8px;
-        font-size: 16px;
+        font-size: 17px;
       }
       td {
         border: solid 1px #fff;
-        border-radius: 8px;
+        border-radius: 6px;
         a {
           display: block;
           width: 100%;
           height: 30px;
-          background-color: #F7EF98;
+          background-color: rgba($color: #333, $alpha: 0.4);
           border-radius: 8px;
           &:hover {
-            background-color: #ff7f58;
+            background-color: #DF907C;
           }
         }
       }
       .reserved-box {
-        background-color: #ff7f58;
+        background-color: #DF907C;
       }
     }
   }

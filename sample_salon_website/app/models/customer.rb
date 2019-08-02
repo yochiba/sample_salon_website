@@ -10,14 +10,14 @@ class Customer < ApplicationRecord
 
   # ユーザー登録(registration_service)
   # TODO パスワードと確認用パスワードが一致しない場合のflash処理を追加
-  def customer_registration?(firstname, lastname, age, gender, email, userid, password, password_confirmation)
+  def customer_registration?(firstname, lastname, age, gender, email, user_id, password, password_confirmation)
     customer_info = Customer.new(
       firstname: firstname,
       lastname: lastname,
       age: age,
       gender: gender,
       email: email,
-      userid: userid,
+      userid: user_id,
       password: password,
       password_confirmation: password_confirmation
       )
@@ -30,18 +30,16 @@ class Customer < ApplicationRecord
   end
 
   # ログイン確認(login_service)
-  def login_checker(userid, password)
+  def login_checker(user_id, password)
     login_check_hash = {}
-    customer_info = Customer.find_by(userid: userid)
- 
+    customer_info = Customer.find_by(userid: user_id)
     login_flg = 0
     if customer_info.present? && password.present? && customer_info.authenticate(password)
-      flash_message = "パスワード認証に成功しました。"
-      login_flg = 5
-    elsif userid.blank? && password.blank?
+      flash_message = "ログインに成功しました。"
+    elsif user_id.blank? && password.blank?
       login_flg = 1
       flash_message = "ユーザーIDとパスワードが空です。"
-    elsif userid.blank?
+    elsif user_id.blank?
       login_flg = 2
       flash_message = "ユーザーIDが空です"
     elsif password.blank?

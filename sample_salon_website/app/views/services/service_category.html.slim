@@ -1,4 +1,11 @@
-h1 カテゴリーページ
+h1 = @service_category_name.servicecategory
 table
   tr
-    th = 
+    th サービス内容
+    th 施術時間
+    th 金額
+  - @service_category.each do |service|
+    tr
+      td = service.servicename
+      td = "#{service.servicetime}分"
+      td = "#{service.serviceprice}円"

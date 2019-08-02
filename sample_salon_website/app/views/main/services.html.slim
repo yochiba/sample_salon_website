@@ -7,13 +7,11 @@
   .service-container
     table
       tr
-        th サービスカテゴリー
         th サービス内容
         th 施術時間
         th 金額
       - @service_info.each do |service|
         tr
-          td = service.servicecategory
-          td = link_to "#{service.servicecategory}", service_detail_path(service.servicecategory)
+          td = link_to "#{service.servicename}", service_detail_path(service.servicename)
           td = "#{service.servicetime}分"
           td = "#{service.serviceprice}円"

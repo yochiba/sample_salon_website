@@ -17,8 +17,8 @@ class AdminsController < ApplicationController
   end
 
   def admin_login_service
-    admin = Admin.new
-    login_check_hash = admin.login_checker(params[:admin_id], params[:password])
+    admin_info = Admin.new
+    login_check_hash = admin_info.login_checker(params[:admin_id], params[:password])
     login_flg = login_check_hash[:login_flg]
     flash.now[:notice] = login_check_hash[:flash_message]
 
@@ -72,32 +72,14 @@ class AdminsController < ApplicationController
     # 例えば、確認画面を追加するのか編集画面で全て住めせてしまうのか。
     # 編集に必要な情報など要検討
 
-    admin_info = Admin.find_by(adminid: params[:admin_id])
-
-    session[:edited_admin_info] = nil
-    if params[:edited_lastname].present? && params[:edited_lastname] != admin_info.lastname
-      session[:edited_admin_info][:edited_lastname] = params[:edited_lastname]
-    end
-
-    if params[:edited_firstname].present? && params[:edited_firstname] != admin_info.firstname
-      session[:edited_admin_info][:edited_firstname] = params[:edited_firstname]
-    end
-
-    if params[:edited_email].present? && params[:edited_email] != admin_info.email
-      session[:edited_admin_info][:edited_email] = params[:edited_email]
-    end
-
-    if params[:edited_admin_id].present? && params[:edited_admin_id] != admin_info.admin_id
-      session[:edited_admin_info][:edited_admin_id] = params[:edited_admin_id]
-    end
-    # パスワード編集処理
-    # if edited_password.present? && edited_lastname != admin_info.lastname
-    # end
+    admin_edit_info = Admin.new
+    admin_edit_hash = admin_edit_info.admin_edit_handler(params[:edited_lastname], params[:edited_firstname], params[:edited_email], params[:edited_admin_id])
+    session[:edited_admin_info] = admin_edit_hash
 
     if session[:edited_admin_info].present?
       redirect_to admin_edit_confirmation_path
     else
-      flash[:notice] = "管理者の編集に編失敗しました。"
+      flash[:notice] = "管理者の編集に失敗しました。"
       render "/main/admin_edit/#{params[:admin_id]}"
     end
   end

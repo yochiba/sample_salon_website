@@ -3,9 +3,9 @@ p
   = link_to "戻る", admin_account_path
 table
   tr
-    td 氏名
-    td お問い合わせ内容
-    td Email
+    th 氏名
+    th お問い合わせ内容
+    th Email
   - @contact_info.each do |contact|
     tr
       td = "#{contact.lastname} #{contact.firstname}"

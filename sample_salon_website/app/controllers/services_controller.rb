@@ -9,6 +9,7 @@ class ServicesController < ApplicationController
 
   def service_manage
     @admin_info = Admin.find_by(adminid: session[:admin_id])
+    @services = Service.all
   end
 
   def service_manage_service
@@ -34,16 +35,18 @@ class ServicesController < ApplicationController
   end
 
   def service_add
+    services = Service.new
+    @service_category_list = services.get_service_categories
   end
 
   def service_add_service
     service_info = Service.new(
       servicename: params[:service_name],
       servicecategory: params[:service_category],
-      serviceflg: params[:service_flg],
       servicetime: params[:service_time],
       serviceprice: params[:service_price],
       servicekeyword: params[:service_keyword],
+      description: params[:service_description]
     )
 
     if params[:service_image].present?
@@ -99,6 +102,7 @@ class ServicesController < ApplicationController
   end
 
   def service_category
+    @service_category_name = Service.find_by(servicecategory: params[:service_category])
     @service_category = Service.where(servicecategory: params[:service_category])
   end
 
@@ -106,7 +110,7 @@ class ServicesController < ApplicationController
   def direct_login_checker
     if session[:admin_id].blank?
       flash[:notice] = "ログインしてください。"
-      redirect_to "/"
+      redirect_to admin_login_path
     end
   end
 end

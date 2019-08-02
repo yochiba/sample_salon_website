@@ -1,7 +1,6 @@
-h1 = "こんにちは、#{@customer_info.userid}さん！ログイン中です。"
-= link_to "ログアウト", logout_service_path, method: :post 
+h2 = "こんにちは、#{@customer_info.userid}さん！ログイン中です。"
 .appointment-container
-  h2 あなたの予約
+  h3 あなたの予約
   table.appointment-box
     tr
       th 予約内容
@@ -16,18 +15,21 @@ h1 = "こんにちは、#{@customer_info.userid}さん！ログイン中です�
         td = appointment.staffname
         td = "#{appointment.totalserviceprice}円"
         td = "#{appointment.totalservicetime}分"
-  h2 過去の予約
-  table.appointment-box
-    tr
-      th 予約内容
-      th 予約日時
-      th 担当スタッフ
-      th 値段
-      th 所要時間
-    - @past_appointment_list.each do |appointment|
+  h3 過去の予約
+  - if @past_appointment_list.instance_of?(String)
+    p = @past_appointment_list
+  -else
+    table.appointment-box
       tr
-        td = appointment.servicename
-        td = "#{appointment.displaydate} #{appointment.displaystarttime}"
-        td = appointment.staffname
-        td = "#{appointment.totalserviceprice}円"
-        td = "#{appointment.totalservicetime}分"
+        th 予約内容
+        th 予約日時
+        th 担当スタッフ
+        th 値段
+        th 所要時間
+      - @past_appointment_list.each do |appointment|
+        tr
+          td = appointment.servicename
+          td = "#{appointment.displaydate} #{appointment.displaystarttime}"
+          td = appointment.staffname
+          td = "#{appointment.totalserviceprice}円"
+          td = "#{appointment.totalservicetime}分"

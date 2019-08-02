@@ -17,17 +17,23 @@ class Appointment < ApplicationRecord
   
 
   # 始業時間
-  @@business_open_hour = 10
+  @@BUSINESS_OPEN_HOUR = 10
   # 就業時間
-  @@business_close_hour = 19
+  @@BUSINESS_CLOSE_HOUR = 19
+  # 60分
+  @@SIXTY_MINUTES = 60
   # トークン単位(30分/1トークン)
-  @@token_icon = 30
+  @@TOKEN_ICON = 30
   # 一月の日数(30日分)
-  @@monthly_dates = 30
+  @@MONTHLY_DATES = 30
+  # 取得する月の数-1(0からスタート)
+  @@MONTH_LIMIT = 3
   # 1月
-  @@january = 1
+  @@JANUARY = 1
   # 12月
-  @@december = 12
+  @@DECEMBER = 12
+  # 1日
+  @@FIRST_DAY = 1
 
   # 予約メニュー選択処理
   # appointment_service_path
@@ -63,10 +69,10 @@ class Appointment < ApplicationRecord
         total_service_time += service_info.servicetime
         total_service_price += service_info.serviceprice
         # 予約時間トークン数を計算
-        if total_service_time % @@token_icon == 0
-          total_token = total_service_time / @@token_icon
+        if total_service_time % @@TOKEN_ICON == 0
+          total_token = total_service_time / @@TOKEN_ICON
         else
-          total_token = total_service_time / @@token_icon + 1
+          total_token = total_service_time / @@TOKEN_ICON + 1
         end
       end
       logger.info("[info]: 合計の施術時間は#{total_service_time}分です。")
@@ -118,12 +124,13 @@ class Appointment < ApplicationRecord
     available_min_list = [0, 30]
     display_time_list = []
 
-    available_hour = @@business_open_hour
-    while available_hour <= @@business_close_hour do
+    # 始業~終業"hour"を配列に格納
+    available_hour = @@BUSINESS_OPEN_HOUR
+    while available_hour <= @@BUSINESS_CLOSE_HOUR do
       available_hour_list.push(available_hour)
       available_hour += 1
     end
-
+    # 営業"時"と"分"を結合して配列に格納
     str_min = nil
     str_hour = nil
     available_hour_list.each do |hour|
@@ -138,94 +145,58 @@ class Appointment < ApplicationRecord
         i += 1
       end
     end
+    # 当日の日付を取得
     today = Date.today
-    # この配列のインデックスは、date_counterと同じ
+    # 日付情報および表示用日付の格納配列
     date_list = []
     display_date_list = []
-    first_month_end = Date.new(today.year, today.month, -1)
-    
     # 来月が新年ならフラグON
     new_year_flg = false
-    if today.month == 12
-      new_year_flg = true
-    end
-    # 当月の日付を取得
-    first_month_date_counter = 0
-    while first_month_date_counter <= @@monthly_dates do
-      first_month_date = Date.new(today.year, today.month, today.day + first_month_date_counter)
-      str_date = first_month_date.strftime("%m/%d(%a)")
-      date_list.push(first_month_date)
-      display_date_list.push(str_date)
-      if first_month_end.day == first_month_date.day
-        new_year_flg = false
-        break
-      end
-      first_month_date_counter += 1
-    end
-
-    second_month_date_counter = 0
-    while second_month_date_counter <= @@monthly_dates do
-      if new_year_flg
-        second_month_date = Date.new(today.year + 1, @@january, 1 + second_month_date_counter)
-        second_month_end = Date.new(today.year + 1, @@january, -1)
-      else
-        second_month_date = Date.new(today.year, today.month + 1, 1 + second_month_date_counter)
-        second_month_end = Date.new(today.year, today.month + 1, -1)
-      end
-      str_date = second_month_date.strftime("%m/%d(%a)")
-      date_list.push(second_month_date)
-      display_date_list.push(str_date)
-      if second_month_end.day == second_month_date.day
-        if second_month_date.month == @@december
-          new_year_flg = true
-        else
-          new_year_flg = false
+    # +1月でmonth_counter += 1
+    month_counter = 0
+    while month_counter <= @@MONTH_LIMIT
+      # 日付カウント
+      date_counter = 0
+      # 新年になった場合の月カウント
+      new_year_month_counter = 0
+      while date_counter <= @@MONTHLY_DATES do
+        year = 0
+        month = 0
+        date = 0
+        if new_year_flg
+          year = today.year + 1
+          month = @@JANUARY + new_year_month_counter
+          date = @@FIRST_DAY + date_counter
+        elsif !new_year_flg && month_counter == 0
+          year = today.year
+          month = today.month
+          date = today.day + date_counter
+        elsif !new_year_flg
+          year = today.year
+          month = today.month + month_counter
+          date = @@FIRST_DAY + date_counter
         end
-        break
-      end
-      second_month_date_counter += 1
-    end
-
-    third_month_date_counter = 0
-    while third_month_date_counter <= @@monthly_dates do
-      if new_year_flg
-        third_month_date = Date.new(today.year + 1, @@january, 1 + third_month_date_counter)
-        third_month_end = Date.new(today.year + 1, @@january, -1)
-      else
-        third_month_date = Date.new(today.year, today.month + 2, 1 + third_month_date_counter)
-        third_month_end = Date.new(today.year, today.month + 2, -1)
-      end
-      str_date = third_month_date.strftime("%m/%d(%a)")
-      date_list.push(third_month_date)
-      display_date_list.push(str_date)
-      if third_month_end.day == third_month_date.day
-        if second_month_date.month == @@december
+        month_date = Date.new(year, month, date)
+        month_end = Date.new(year, month, -1)
+        # 日付情報および、表示用日付情報を配列に格納
+        str_date = month_date.strftime("%m/%d(%a)")
+        date_list.push(month_date)
+        display_date_list.push(str_date)
+        # 年を跨ぐ場合        
+        if month_date.day == month_end.day && month_date.month == @@DECEMBER
           new_year_flg = true
-        else
-          new_year_flg = false
+          date_counter = 0
+          break
+        elsif month_date.day == month_end.day && month_date.month != @@DECEMBER
+          date_counter = 0
+          if new_year_flg
+            new_year_month_counter += 1
+          end
+          break
         end
-        break
+        date_counter += 1
       end
-      third_month_date_counter += 1
-    end
-
-    fourth_month_date_counter = 0
-    while fourth_month_date_counter <= @@monthly_dates do
-      if new_year_flg
-        fourth_month_date = Date.new(today.year + 1, @@january, 1 + fourth_month_date_counter)
-        fourth_month_end = Date.new(today.year + 1, @@january, -1)
-      else
-        fourth_month_date = Date.new(today.year, today.month + 3, 1 + fourth_month_date_counter)
-        fourth_month_end = Date.new(today.year, today.month + 3, -1)
-      end
-      str_date = fourth_month_date.strftime("%m/%d(%a)")
-      date_list.push(fourth_month_date)
-      display_date_list.push(str_date)
-      if fourth_month_end.day == fourth_month_date.day
-        new_year_flg = false
-        break
-      end
-      fourth_month_date_counter += 1
+      month_counter += 1
     end
 
     # カレンダー用
@@ -240,43 +211,48 @@ class Appointment < ApplicationRecord
     return appointment_calendar_hash
   end
 
-  # 予約カレンダー表示処理(スタッフの空き情報)
+  # スタッフの空き情報をカレンダーに反映する処理
   def check_appointment(staff_id)
+    reserved_appointment_hash = {}
     reserved_appointment_list = []
     if staff_id == 0
-      appointment = Appointment.all
+      reserved_appointment_list = Appointment.all
     else
-      appointments = Appointment.where(staffid: staff_id)
+      reserved_appointment_list = Appointment.where(staffid: staff_id)
     end
+    
 
-    appointments.each do |appointment|
-      logger.info("[Debug]: #{appointment.startdate}")
-      reserved_appointment_list.push(appointment)
-    end
     return reserved_appointment_list
   end
 
-
+  # 予約日時を計算および構築する処理
   def get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
     # 予約日を取得
     appointment_start_date = date.to_date
-    # 予約トークン数取得
+    # 予約トークン数取得処理
     int_start_token_id = start_token_id.to_i
-    logger.info("[info]: スタートトークンID: #{int_start_token_id}")
     int_total_token = total_token.to_i
     end_token = int_start_token_id + int_total_token
-    total_time = (end_token - int_start_token_id) * @@token_icon
-
+    total_time = (end_token - int_start_token_id) * @@TOKEN_ICON
+    # 使用するトークンID全てを格納する
+    token_ids = (start_token_id.to_i..(int_start_token_id + int_total_token)).to_a
+    
+    # 予約開始時間(時)
     start_hour = start_time[0, 2].to_i
+    # 予約開始時間(分)
     start_min = start_time[3, 2].to_i
-    end_hour = start_hour + (total_time / 60).floor
-    end_min = (total_time % 60) * 60.floor
+    # 予約終了時間(時)
+    end_hour = start_hour + (total_time / @@SIXTY_MINUTES).floor
+    # 予約終了時間(分)
+    end_min = (total_time % @@SIXTY_MINUTES) * @@SIXTY_MINUTES.floor
     # end_minが60分を越える時の処理
-    if end_min >= 60
-      end_hour += (end_min / 60).floor
-      end_min = (end_min % 60) * 60.floor
+    if end_min >= @@SIXTY_MINUTES
+      end_hour += (end_min / @@SIXTY_MINUTES).floor
+      end_min = (end_min % @@SIXTY_MINUTES) * @@SIXTY_MINUTES.floor
     end
 
+    logger.info("[info]: スタートトークンID: #{int_start_token_id}")
+    # logger.info("[info]: 使用するトークンID: #{token_ids}")
     logger.info("[info]: #{start_hour}時#{start_min}分")
     logger.info("[info]: #{end_hour}時#{end_min}分")
     logger.info("[info]: #{total_time}分")
@@ -294,17 +270,18 @@ class Appointment < ApplicationRecord
     # 予約開始時間
     appointment_time_hash[:start_time] = appointment_start_time
     # 予約開始日付
-    appointment_time_hash[:display_date] = appointment_start_date.strftime("%m/%d(%a)")
+    appointment_time_hash[:display_date] = appointment_start_date.strftime("%m月%d日(%a)")
     # 予約開始日(表示用)
     appointment_time_hash[:display_start_date] = display_start_date
     # 予約開始時(表示用)
     appointment_time_hash[:display_start_time] = display_start_time
     # スタートトークンID
     appointment_time_hash[:start_token_id] = start_token_id
+    # 使用する全てのトークンIDを配列に格納したもの
+    # appointment_time_hash[:token_ids] = token_ids
     # 合計サービス時間
     appointment_time_hash[:total_time] = total_time
-    logger.info("[DEBUG]: #{appointment_time_hash[:start_date]}")
-    logger.info("[DEBUG]: #{appointment_time_hash[:end_date]}")
+
     return appointment_time_hash
   end
 

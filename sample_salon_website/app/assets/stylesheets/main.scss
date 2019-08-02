@@ -12,71 +12,7 @@
     text-align: center;
     line-height: 450px;
   }
-  a {
-    display: block;
-    width: 280px;
-    height: 55px;
-    margin: 0 auto;
-    border: solid 2px #fff;
-    border-radius: 17px;
-    background-color: #fe5e41;
-    color: #fff;
-    font-size: 20px;
-    text-align: center;
-    line-height: 55px;
-  }
 }
-
-.service-categories {
-  width: 100%;
-  height: auto;
-  h2 {
-    text-align: center;
-    color:#000;
-    padding-top: 20px;
-  }
-  .services-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%;
-    height: auto;
-    margin: 40px auto 20px;
-    .services-sub-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      .service-box {
-        width: 50%;
-        height: 350px;
-        background-image: url("/images/service-category1.jpg");
-        background-size: cover;
-        a {
-          display: block;
-          width: 100%;
-          height: 350px;
-          color: #fff;
-          font-size: 40px;
-          font-weight: bold;
-          text-align: center;
-          line-height: 350px;
-        }
-        & :hover {
-          background-color: rgba($color: #000, $alpha: 0.3);
-        }
-      }
-    }
-  }
-}
-
-
-.footer {
-  width: 100%;
-  height: 400px;
-  background-color: #abe188;
-}
-
-
 
 // サービス一覧(services_path)ここから
 .services {
@@ -91,7 +27,8 @@
     width: 60%;
     height: auto;
     margin: 20px auto;
-    background-color: #f9f9f9;
+    background-color: rgba($color: #333, $alpha: 0.4);
+    color: #f5f6fa;
     padding: 30px;
     table {
       border-collapse: collapse;
@@ -102,14 +39,14 @@
       font-size: 18px;
       // border: solid 2px #000;
       tr {
-        border-bottom: solid 1px #000;
+        border-bottom: solid 1px #f5f6fa;
         th {
           // border: solid 1px #000;
         }
         td {
           // border: solid 1px #000;
           a {
-            color: #000;
+            color: #f5f6fa;
           }
         }
       }

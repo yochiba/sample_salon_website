@@ -16,3 +16,16 @@ h3 サービス検索
     - session[:service].each do |service|
       p
         = link_to "#{service}", service_edit_path(service)
+.services-list
+  table
+    tr
+      th サービス内容
+      th カテゴリー
+      th 施術時間
+      th 金額
+    - @services.each do |service|
+      tr
+        td = link_to "#{service.servicename}", service_detail_path(service.servicename)
+        td = service.servicecategory
+        td = "#{service.servicetime}分"
+        td = "#{service.serviceprice}円"

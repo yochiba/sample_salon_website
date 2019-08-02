@@ -35,7 +35,7 @@ body {
 .header-container {
   width: 100%;
   height: 50px;
-  background-color: #f7ef99;
+  background-color: rgba($color: #E1E3E4, $alpha: 0.8);
   ul {
     display: flex;
     flex-direction: row;
@@ -44,14 +44,14 @@ body {
         display: block;
         width: 150px;
         height: 50px;
-        color: #000;
+        color: #333;
         font-size: 16px;
         text-align: center;
         line-height: 50px;
         &:hover {
-          background-color: rgba($color: #f78e96, $alpha: 0.5);
+          background-color: rgba($color: #333, $alpha: 0.5);
           height: 47px;
-          border-bottom: solid 3px #fff;
+          color: #E1E3E4;
         }
       }
     }
@@ -62,6 +62,6 @@ body {
   width: 100%;
   height: 100px;
   line-height: 100px;
-  background-color: #f7ef99;
+  background-color: #E1E3E4;
   text-align: center;
 }

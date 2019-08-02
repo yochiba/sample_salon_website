@@ -1,12 +1,8 @@
-h1 担当スタッフを選択してください
-= form_with url: appointment_staff_service_path, local: true do |f|
+.appointment
+  h2 担当スタッフを選択してください
   - @staff_info.each do |staff|
     .staff-info
-      = f.radio_button :staff_id, "#{staff.id}"
-      = f.label :" #{staff.displayname}"
+      = link_to "#{staff.displayname}", appointment_staff_service_path(staff.id), method: :post
   .staff-info
-    = f.radio_button :staff_id, 0
-    = f.label :" 指名なし"
-  = f.submit "予約日時の選択へ進む"
+    = link_to "指名なし", appointment_staff_service_path(0), method: :post
 = link_to "予約を取り消す", appointment_delete_service_path, method: :post
-        

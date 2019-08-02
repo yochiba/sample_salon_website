@@ -1,17 +1,9 @@
 require 'date'
 
 class AppointmentsController < ApplicationController
-  before_action :cheat_appointment_checker, {only: [
-    :appointment_staff,
-    :appointment_staff_service,
-    :appointment_date,
-    :appointment_date_service,
-    :appointment_customer_info,
-    :appointment_customer_info_service,
-    :appointment_confirmation,
-    :appointment_confirmation_service,
-    :appointment_complete,
-    :appointment_delete_service
+  before_action :cheat_appointment_checker, {except: [
+    :appointment,
+    :appointment_service
   ]}
 
   def appointment
@@ -114,6 +106,10 @@ class AppointmentsController < ApplicationController
     appointment_time_hash = appointment.get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
     session[:appointment_date] = appointment_time_hash
 
+
+
+
+
     if session[:appointment_date].present?
       logger.info("[info]: 現在の予約状況は、#{session[:appointment_date]}です。")
       redirect_to appointment_customer_info_path
@@ -164,7 +160,7 @@ class AppointmentsController < ApplicationController
 
   def appointment_confirmation_service
     logger.info("[info]: #{session[:appointment_customer]}")
-    logger.info("[info]100: #{session[:appointment_date]["start_date"]}")
+    logger.info("[info]: 予約日時:#{session[:appointment_date]["start_date"]}")
     appointment_info = Appointment.new(
       firstname: session[:appointment_customer]["firstname"],
       lastname: session[:appointment_customer]["lastname"],
@@ -178,6 +174,7 @@ class AppointmentsController < ApplicationController
       totalserviceprice: session[:appointment_service]["total_service_price"],
       totaltoken: session[:appointment_service]["total_token"],
       starttokenid: session[:appointment_date]["start_token_id"],
+      # tokenids: session[:appointment_date]["token_ids"],
       displaydate: session[:appointment_date]["display_date"],
       displaystartdate: session[:appointment_date]["display_start_date"],
       displaystarttime: session[:appointment_date]["display_start_time"],
@@ -189,20 +186,19 @@ class AppointmentsController < ApplicationController
       redirect_to appointment_complete_path
     else
       flash[:notice] = "予約に失敗しました。もう一度やり直してください。"
-      session.delete(:appointment_service)
-      session.delete(:appointment_staff)
-      session.delete(:appointment_date)
-      session.delete(:appointment_customer)
+      # session.delete(:appointment_service)
+      # session.delete(:appointment_staff)
+      # session.delete(:appointment_date)
+      # session.delete(:appointment_customer)
       render "/main/home"
     end
   end
 
   def appointment_complete
-    session.delete(:appointment_service)
-    session.delete(:appointment_staff)
-    session.delete(:appointment_date)
-    session.delete(:appointment_customer)
-    
+    # session.delete(:appointment_service)
+    # session.delete(:appointment_staff)
+    # session.delete(:appointment_date)
+    # session.delete(:appointment_customer)
   end
 
   # 予約キャンセルおよび予約途中での破棄の役割
@@ -224,4 +220,13 @@ class AppointmentsController < ApplicationController
       redirect_to appointment_path
     end
   end
+
+  # def appointment_session_delete
+  #   if session.delete(:appointment_service).present? || session.delete(:appointment_staff).present? || session.delete(:appointment_date).present? || session.delete(:appointment_customer).present?
+  #     session.delete(:appointment_service)
+  #     session.delete(:appointment_staff)
+  #     session.delete(:appointment_date)
+  #     session.delete(:appointment_customer)
+  #   end
+  # end
 end

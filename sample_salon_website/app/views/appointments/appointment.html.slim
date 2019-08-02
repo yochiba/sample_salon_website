@@ -1,21 +1,18 @@
-h1 予約サービスページ
-= form_with url: appointment_service_path, local: true do |f|
-  table
-    tr
-      th
-      th 内容
-      th 金額
-      th 時間
-    - @services.each do |service|
+.appointment
+  h2 予約
+  = form_with url: appointment_service_path, local: true do |f|
+    table
       tr
-        td
-          .service-check 
+        th 内容
+        th 金額
+        th 時間
+      - @services.each do |service|
+        tr
+          td.service-name
             = f.check_box :service_name, {multiple: true}, "#{service.servicename}", nil
-        td
-          = service.servicename
-        td
-          = "￥#{service.serviceprice}"
-        td
-          = "#{service.servicetime} 分"
-  p
-    = f.submit "スタッフ選択へ進む"
+            = " #{service.servicename}"
+          td
+            = "￥#{service.serviceprice}"
+          td
+            = "#{service.servicetime} 分"
+    = f.submit "スタッフ選択へ進む", class: "submit-btn"
