@@ -73,15 +73,15 @@ class Customer < ApplicationRecord
 
   # ユーザーアカウント内で過去の予約情報を取得する
   def get_past_appointment_info(firstname, lastname, email)
-    past_appointment_list = Appointment.where( 
+    past_appointment_array = Appointment.where( 
       firstname: firstname,
       lastname: lastname,
       email: email,
       past_flg: 1
       ).order(startdate: :DESC).limit 5
     
-    if past_appointment_list.present?
-      return past_appointment_list
+    if past_appointment_array.present?
+      return past_appointment_array
     else
       message = "過去の予約はございません。"
       return message

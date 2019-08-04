@@ -26,20 +26,16 @@
           - check_date = date_list[date_counter]
           - reserved_flg_staff = false
           - reserved_flg_nostaff = false
-          - close_day_flg = false
-          - if check_date.wday == 2
-            - close_day_flg = true
           // FIXME 下記の@reserved_appointment_listでtotaltokenを取得してトークン分は予約を埋める。
-          - if @daily_tokens_flg_hash["#{check_date}"].present?
-            - @daily_tokens_flg_hash["#{check_date}"].each do |tokens_flg|
-              - if tokens_flg[start_token_id] == 1
-                - reserved_flg_staff = true
+          - if @reserved_appointment_hash["#{check_date}"].present?
+            - if @reserved_appointment_hash["#{check_date}"][start_token_id] == 1
+              - reserved_flg_staff = true
               / - if 
               /   - reserved_flg_nostaff = true
-          - if close_day_flg || reserved_flg_staff || reserved_flg_nostaff
+          - if reserved_flg_staff || reserved_flg_nostaff
             td.reserved-box
           - else
-            td = link_to "", appointment_date_service_path(date_counter, check_date, start_time, start_token_id), method: :post
+            td = link_to "#{check_date} #{start_time}", appointment_date_service_path(date_counter, check_date, start_time, start_token_id), method: :post
           - date_counter += 1
   = link_to "予約を取り消す", appointment_delete_service_path, method: :post
 // FIXME カレンダー表示の修正および、コントローラで処理を行う

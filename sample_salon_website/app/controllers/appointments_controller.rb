@@ -24,9 +24,9 @@ class AppointmentsController < ApplicationController
 
   def appointment_service
     appointment = Appointment.new
-    appointment_service_list = appointment.get_appointment_service_list(params[:service_name])
-    session[:appointment_service] = appointment_service_list[0]
-    noservice_flg = appointment_service_list[1]
+    appointment_service_array = appointment.get_appointment_service_array(params[:service_name])
+    session[:appointment_service] = appointment_service_array[0]
+    noservice_flg = appointment_service_array[1]
     if noservice_flg == 0 && session[:appointment_service].present?
       logger.info("[info]:サービス選択に成功しました。")
       logger.info("[info]: 現在のサービス予約状況は、#{session[:appointment_service]}です。")
@@ -53,10 +53,10 @@ class AppointmentsController < ApplicationController
 
   def appointment_staff_service
     appointment = Appointment.new
-    appointment_staff_list = appointment.get_appointment_staff_list(params[:staff_id])
+    appointment_staff_array = appointment.get_appointment_staff_array(params[:staff_id])
 
-    appointment_staff_hash = appointment_staff_list[0]
-    nostaff_flg = appointment_staff_list[1]
+    appointment_staff_hash = appointment_staff_array[0]
+    nostaff_flg = appointment_staff_array[1]
     session[:appointment_staff] = appointment_staff_hash
     if nostaff_flg == 0 && session[:appointment_staff].present?      
       logger.info("[info]:スタッフ選択に成功しました。")
@@ -84,11 +84,12 @@ class AppointmentsController < ApplicationController
     # 3ヶ月分の日付を取得する
     @dates_hash = appointment.generate_dates_hash
     # 既存の予約情報を取得
-    @reserved_appointment_list = appointment.check_appointment(session[:appointment_staff]["staff_id"])
-    # カレンダーに予約済み範囲の取得(スタッフ選択時)
-    @daily_tokens_flg_hash = appointment.token_caliculator(@reserved_appointment_list, @business_hour_hash[:display_time])
-    # FIXME トータルトークンと空きを比較して、キャパオーバーならreservedにする処理
-    
+    @existing_appointments_array = appointment.check_existing_appointment(session[:appointment_staff]["staff_id"])
+    # 予約済み範囲の取得(スタッフ選択時)
+    @daily_tokens_flg_hash = appointment.get_daily_tokens_flg_hash(@dates_hash, @existing_appointments_array, @business_hour_hash[:display_time], session[:appointment_service]["total_token"])
+    # 予約済み範囲の最終的な結果を取得
+    # (各予約間のトークン数と新規予約の合計トークン数を比較して、予約の可否を算出)
+    @reserved_appointment_hash = appointment.get_final_tokens_flg_hash(@daily_tokens_flg_hash, session[:appointment_service]["total_token"])
   end
 
   def appointment_date_service
@@ -178,7 +179,6 @@ class AppointmentsController < ApplicationController
       totalserviceprice: session[:appointment_service]["total_service_price"],
       totaltoken: session[:appointment_service]["total_token"],
       starttokenid: session[:appointment_date]["start_token_id"],
-      # tokenids: session[:appointment_date]["token_ids"],
       displaydate: session[:appointment_date]["display_date"],
       displaystartdate: session[:appointment_date]["display_start_date"],
       displaystarttime: session[:appointment_date]["display_start_time"],

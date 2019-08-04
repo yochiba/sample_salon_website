@@ -6,12 +6,12 @@ class Service < ApplicationRecord
   validates :serviceprice, presence: true
 
   def get_service_categories
-    service_category_list = [
+    service_category_array = [
       "カット",
       "パーマ",
       "カラー",
       "その他"
     ]
-    return service_category_list
+    return service_category_array
   end
 end
