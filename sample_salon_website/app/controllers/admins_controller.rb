@@ -10,6 +10,10 @@ class AdminsController < ApplicationController
     :admin_logout
   ]}
 
+  before_action :staff_add_validation, {only: [
+    :admin_manage_staff_add_confirmation
+  ]}
+
   def admin_login
     if session[:admin_id].present?
       redirect_to "/admin_account"
@@ -135,17 +139,73 @@ class AdminsController < ApplicationController
     @contact_info = Contact.all
   end
 
+  def admin_manage_staff
+  end
+
+  def admin_manage_staff_list
+    @staffs = Staff.all
+  end
+
+  def admin_manage_staff_add
+  end
+
+  def admin_manage_staff_add_service
+    lastname = params[:lastname]
+    firstname = params[:firstname]
+    display_name = params[:display_name]
+    email = params[:email]
+
+    staff = Staff.new
+    staff_info_hash = staff.get_staff_info_hash(lastname, firstname, display_name, email)
+    staff_add_error_message = staff.staff_add_form_checker(lastname, firstname, display_name, email)
+    
+    if staff_add_error_message.blank?
+      session[:staff_info] = staff_info_hash
+      redirect_to admin_manage_staff_add_confirmation_path
+    else
+      flash[:notice] = staff_add_error_message
+      redirect_to admin_manage_staff_add_path
+    end
+  end
+
+  def admin_manage_staff_add_confirmation
+  end
+
+  def admin_manage_staff_add_confirmation_service
+    if params[:flg] == "done"
+      staff = Staff.new
+      staff.staff_registrator(session[:staff_info])
+      session.delete(:staff_info)
+      flash[:notice] = "スタッフ登録が完了しました。"
+    else
+      session.delete(:staff_info)
+      flash[:notice] = "スタッフ登録を取り消しました。"
+    end
+    redirect_to admin_manage_staff_list_path
+  end
+
+  def admin_manage_staff_shift
+
+  end
+
   def admin_logout_service
     session.delete(:service)
     session.delete(:admin_id)
-    redirect_to "/admin_login/"
+    redirect_to admin_login_path
   end
 
   private
   def direct_login_checker
     if session[:admin_id].blank?
       flash[:notice] = "ログインしてください。"
-      redirect_to "/admin_login/"
+      redirect_to admin_login_path
+    end
+  end
+
+  def staff_add_validation
+    if session[:staff_info].blank?
+      flash[:notice] = "スタッフ情報を入力してください。"
+      redirect_to admin_manage_staff_add_path
     end
   end
 end

@@ -1,7 +1,6 @@
-// Place all the styles related to the main controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
+@charset "UTF-8";
+@import "./textTemplate";
+@import "./template";
 
 .top {
   width: 100%;
@@ -14,20 +13,22 @@
   }
 }
 
+.about {
+  h2 {
+    @include theme-text(24px, #333);
+  }
+}
+
 // サービス一覧(services_path)ここから
 .services {
-  width: 100%;
-  height: auto;
-  color: #333;
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
   h2 {
-    text-align: center;
-    padding: 20px;
+    @include theme-text(20px, #f5f6fa);
   }
   .service-container {
     width: 60%;
     height: auto;
     margin: 20px auto;
-    background-color: rgba($color: #333, $alpha: 0.4);
     color: #f5f6fa;
     padding: 30px;
     table {
@@ -37,16 +38,14 @@
       text-align: center;
       line-height: 40px;
       font-size: 18px;
-      // border: solid 2px #000;
       tr {
         border-bottom: solid 1px #f5f6fa;
         th {
           // border: solid 1px #000;
         }
         td {
-          // border: solid 1px #000;
           a {
-            color: #f5f6fa;
+            @include link_without_border(80%, 35px, 18px, #f5f6fa, 5px);
           }
         }
       }
@@ -57,24 +56,38 @@
 
 // サービス一覧(service_detail_path)ここから
 .service-detail {
+  h3{
+    @include theme-text(20px, #f5f6fa);
+  }
   .service-detail-container {
-    width: 70%;
-    height: 500px;
-    background-color: #f3f3f3;
-    margin: 30px auto;
-    text-align: center;
-    h2 {
-      padding: 20px; 
+    @include background(70%, 500px, 20px, 20px, #333, 0.4);
+    img {
+      @include image(45%, auto, 10px);
     }
     .description {
       width: 100%;
       height: 200px;
       margin: 0 auto;
+      text-align: center;
       font-size: 16px;
-      h3 {
-        padding: 10px;
-      }
+      color: #f5f6fa;
     }
   }
 }
 // サービス一覧(service_detail_path)ここまで
+
+// アカウント(account_path)ここから
+.account-appointment-container {
+  @include background(90%, 500px, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+  }
+  h4 {
+    @include theme-text(18px, #f5f6fa);
+    padding-top: 10px;
+  }
+  .appointment-check-container {
+    @include table(80%, auto);
+  }
+}
+// アカウントページ(account_path)ここまで

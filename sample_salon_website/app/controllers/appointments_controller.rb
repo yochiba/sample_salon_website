@@ -86,7 +86,7 @@ class AppointmentsController < ApplicationController
     # 既存の予約情報を取得
     @existing_appointments_array = appointment.check_existing_appointment(session[:appointment_staff]["staff_id"])
     # 予約済み範囲の取得(スタッフ選択時)
-    @daily_tokens_flg_hash = appointment.get_daily_tokens_flg_hash(@dates_hash, @existing_appointments_array, @business_hour_hash[:display_time], session[:appointment_service]["total_token"])
+    @daily_tokens_flg_hash = appointment.get_daily_tokens_flg_hash(@dates_hash, @existing_appointments_array, @business_hour_hash[:display_time], session[:appointment_service]["total_token"], session[:appointment_staff]["staff_id"])
     # 予約済み範囲の最終的な結果を取得
     # (各予約間のトークン数と新規予約の合計トークン数を比較して、予約の可否を算出)
     @reserved_appointment_hash = appointment.get_final_tokens_flg_hash(@daily_tokens_flg_hash, session[:appointment_service]["total_token"])
@@ -110,11 +110,7 @@ class AppointmentsController < ApplicationController
     appointment = Appointment.new
     appointment_time_hash = appointment.get_appointment_time_hash(date_counter, date, start_time, start_token_id, total_token, staff_id)
     session[:appointment_date] = appointment_time_hash
-
-
-
-
-
+    
     if session[:appointment_date].present?
       logger.info("[info]: 現在の予約状況は、#{session[:appointment_date]}です。")
       redirect_to appointment_customer_info_path

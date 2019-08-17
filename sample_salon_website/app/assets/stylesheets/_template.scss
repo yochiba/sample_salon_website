@@ -1,0 +1,161 @@
+@charset "UTF-8";
+
+@mixin flash($width, $height, $font-size) {
+  width: $width;
+  height: $height;
+  background-color: rgba($color: #DF907C, $alpha: 0.9);
+  text-align: center;
+  line-height: $height;
+  font-size: $font-size;
+  color:#f5f6fa;
+}
+
+// ヘッダーテンプレート
+@mixin header($height) {
+  width: 100%;
+  height: $height;
+  background-color: rgba($color: #E1E3E4, $alpha: 0.8);
+  ul {
+    display: flex;
+    flex-direction: row;
+    li {
+      a{
+        display: block;
+        width: 150px;
+        height: $height;
+        color: #333;
+        font-size: 16px;
+        text-align: center;
+        line-height: $height;
+        &:hover {
+          background-color: rgba($color: #333, $alpha: 0.5);
+          height: 47px;
+          color: #E1E3E4;
+        }
+      }
+    }
+  }
+}
+
+@mixin table {
+  width: 100%;
+  height: auto;
+  color: #333;
+  h2 {
+    text-align: center;
+    padding: 20px;
+  }
+  .service-container {
+    width: 60%;
+    height: auto;
+    margin: 20px auto;
+    background-color: rgba($color: #333, $alpha: 0.4);
+    color: #f5f6fa;
+    padding: 30px;
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 40px;
+      font-size: 18px;
+      // border: solid 2px #000;
+      tr {
+        border-bottom: solid 1px #f5f6fa;
+        th {
+          // border: solid 1px #000;
+        }
+        td {
+          // border: solid 1px #000;
+          a {
+            color: #f5f6fa;
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin background($width, $height, $margin, $padding, $bg-color, $bg-alpha) {
+  width: $width;
+  height: $height;
+  margin: $margin auto;
+  padding: $padding 0;
+  background-color: rgba($color: $bg-color, $alpha: $bg-alpha);
+}
+
+@mixin image($width, $height, $margin) {
+  display: block;
+  width: $width;
+  height: $height;
+  margin: $margin auto;
+}
+
+@mixin link_without_border($width, $height, $font-size, $color, $margin) {
+  display: block;
+  width: $width;
+  height: $height;
+  background-color: transparent;
+  margin: $margin auto;
+  font-size: $font-size;
+  text-align: center;
+  line-height: $height;
+  color: $color;
+  &:hover {
+    background-color: rgba($color: #333, $alpha: 0.5);
+    color: $color;
+  }
+  &:active {
+    background-color: rgba($color: #333, $alpha: 0.5);
+    color: $color;
+  }
+}
+
+@mixin link_with_border($width, $height, $font-size, $color, $margin) {
+  display: block;
+  width: $width;
+  height: $height;
+  background-color: transparent;
+  margin: $margin auto;
+  border: solid 2px;
+  font-size: $font-size;
+  text-align: center;
+  line-height: $height;
+  color: $color;
+  &:hover {
+    background-color: rgba($color: #333, $alpha: 0.5);
+    color: $color;
+  }
+  &:active {
+    background-color: rgba($color: #333, $alpha: 0.5);
+    color: $color;
+  }
+}
+
+
+@mixin table($width, $height) {
+  width: $width;
+  height: $height;
+  margin: 0 auto;
+  color: #f5f6fa;
+  padding: 20px;
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    tr {
+      border-bottom: solid 1px #f5f6fa;
+      th {
+        // border: solid 1px #000;
+      }
+      td {
+        // a {
+        //   @include link_without_border(80%, 10px, 18px, #f5f6fa, 5px);
+        // }
+      }
+    }
+  }
+}

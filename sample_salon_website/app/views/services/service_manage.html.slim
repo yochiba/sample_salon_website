@@ -1,4 +1,4 @@
-h2 サービス管理ページ(ログイン中です: #{@admin_info.adminid})
+h3 サービス管理ページ(ログイン中です: #{@admin_info.adminid})
 p
   = link_to "サービスを追加", service_add_path
 p
@@ -16,7 +16,7 @@ h3 サービス検索
     - session[:service].each do |service|
       p
         = link_to "#{service}", service_edit_path(service)
-.services-list
+.services-table
   table
     tr
       th サービス内容

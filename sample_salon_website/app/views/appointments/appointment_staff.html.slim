@@ -3,6 +3,7 @@
   - @staff_info.each do |staff|
     .staff-info
       = link_to "#{staff.displayname}", appointment_staff_service_path(staff.id), method: :post
-  .staff-info
-    = link_to "指名なし", appointment_staff_service_path(0), method: :post
+  / FIXME 指名なし機能は一時停止
+  / .staff-info
+  /   = link_to "指名なし", appointment_staff_service_path(0), method: :post
 = link_to "予約を取り消す", appointment_delete_service_path, method: :post

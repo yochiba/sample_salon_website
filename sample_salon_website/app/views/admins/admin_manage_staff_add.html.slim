@@ -1,0 +1,12 @@
+.staff-add
+  h2 スタッフ追加画面
+  = form_with model: @staff, local: true do |f|
+    = f.label :姓
+    = f.text_field :lastname
+    = f.label :名
+    = f.text_field :firstname
+    = f.label :表示名
+    = f.text_field :display_name
+    = f.label :Email
+    = f.email_field :email
+    = f.submit "確認"

@@ -1,15 +1,15 @@
 // Place all the styles related to the appointments controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@charset "UTF-8";
+@import "./textTemplate";
+@import "./template";
+
 .appointment {
-  color:  #f5f6fa;
-  width: 80%;
-  height: auto;
-  margin: 30px auto;
-  padding: 20px 0;
-  background-color: rgba($color: #333, $alpha: 0.4);
+  color: #f5f6fa;
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
   h2 {
-    text-align: center; 
+    @include theme-text(20px, #f5f6fa);
   }
   form {
     width: 90%;
@@ -43,54 +43,39 @@
         font-size: 17px;
         line-height: 40px;
         width: 35%;
-        border-bottom: solid 1px #333;
+        border-bottom: solid 1px #f5f6fa;
       }
     }
   }
-
   a {
-    display: block;
-    width: 30%;
-    height: 70px;
-    background-color: transparent;
-    border: solid 2px ;
-    margin: 20px auto;
-    font-size: 20px;
-    text-align: center;
-    line-height: 70px;
-    color: #E1E3E4;
-    &:hover {
-      background-color: rgba($color: #333, $alpha: 0.5);
-      color: #E1E3E4;
-    }
+    @include link_with_border(30%, 70px, 20px, #f5f6fa, 10px)
   }
 }
 
-
 .appointment-calendar {
-  width:95%;
+  width: 95%;
   height: auto;
   h3 {
-    text-align: center;
+    @include theme-text(18px, #333);
     padding-top: 10px;
   }
   table {
-    width:80%;
+    width: 80%;
     margin: 20px auto 10px;
     border-collapse: collapse;
     border-spacing: 0;
     tr {
-      color: #E1E3E4;
+      color: #f5f6fa;
       background-color: rgba($color: #333, $alpha: 0.5);
       th {
         line-height: 30px;
         font-weight: normal;
-        border: solid 1px #fff;
+        border: solid 1px #f5f6fa;
         border-radius: 8px;
         font-size: 17px;
       }
       td {
-        border: solid 1px #fff;
+        border: solid 1px #f5f6fa;
         border-radius: 6px;
         a {
           display: block;
@@ -103,7 +88,7 @@
           font-size: 12px;
           color: transparent;
           &:hover {
-            color: #fff;
+            color: #f5f6fa;
             background-color: #DF907C;
           }
         }
@@ -113,4 +98,40 @@
       }
     }
   }
+}
+
+.appointment-confirmation-table {
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+  }
+  p {
+    @include theme-text(16px, #f5f6fa);
+  }
+  .appointment-confirmation-container {
+    @include table(80%, auto);
+  }
+  .appointment-confirmation-link {
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 0 auto;
+    a {
+      @include link_with_border(20%, 40px, 18px, #f5f6fa, 10px);  
+    }
+  }
+
+}
+
+.appointment-complete {
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+    padding: 20px;
+  }
+  a {
+    @include link_with_border(20%, 40px, 18px, #f5f6fa, 10px);
+  }
+
 }

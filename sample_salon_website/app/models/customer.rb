@@ -78,7 +78,7 @@ class Customer < ApplicationRecord
       lastname: lastname,
       email: email,
       past_flg: 1
-      ).order(startdate: :DESC).limit 5
+      ).order(startdate: :DESC).limit 3
     
     if past_appointment_array.present?
       return past_appointment_array

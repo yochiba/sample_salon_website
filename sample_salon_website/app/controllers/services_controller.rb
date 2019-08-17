@@ -13,6 +13,7 @@ class ServicesController < ApplicationController
   end
 
   def service_manage_service
+    # FIXME サービス検索において、キーワードがヒットしなかったらエラーになる。
     # FIXME ransackを使った検索に変更する
     @admin_info = Admin.find_by(adminid: session[:admin_id])
     # @q = Service.ransack(params[:q])

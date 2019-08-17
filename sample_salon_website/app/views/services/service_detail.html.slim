@@ -1,11 +1,9 @@
 .service-detail
   .service-detail-container
     h3 = @service_info.servicename
-    .service-image
-      // TODO バックグラウンドイメージにするといいかも
-      img src="/service_images/#{@service_info.serviceimage}"
+    / .service-image
+    img src="/service_images/#{@service_info.serviceimage}"
     .description
-      h3 サービス説明
       p = @service_info.description
   - if !session[:admin_id]
     = link_to "予約する", services_path

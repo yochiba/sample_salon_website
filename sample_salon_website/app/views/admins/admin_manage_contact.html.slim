@@ -1,13 +1,14 @@
-h1 管理者用 お問い合わせ管理ページ
-p
-  = link_to "戻る", admin_account_path
-table
-  tr
-    th 氏名
-    th お問い合わせ内容
-    th Email
-  - @contact_info.each do |contact|
-    tr
-      td = "#{contact.lastname} #{contact.firstname}"
-      td = contact.message
-      td = contact.email
+.admin-manage-contact
+  h3 管理者用 お問い合わせ管理ページ
+  .admin-manage-contact-table
+    table
+      tr
+        th 氏名
+        th お問い合わせ内容
+        th Email
+      - @contact_info.each do |contact|
+        tr
+          td = "#{contact.lastname} #{contact.firstname}"
+          td = contact.message
+          td = contact.email
+// TODO お問い合わせ内容詳細ページを追加

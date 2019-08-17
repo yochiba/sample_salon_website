@@ -1,11 +1,12 @@
-h2 予約確認画面
-p こちらで予約を確定してよろしいですか？
-table
-  - @appointment_info_hash.each do |key, appointment|
-    tr
-      th = key
-      td = appointment
-p
-  = link_to "予約確定", appointment_confirmation_service_path, method: :post
-p
-  = link_to "予約を取り消す", appointment_delete_service_path, method: :post
+.appointment-confirmation-table
+  h3 予約確認画面
+  p こちらで予約を確定してよろしいですか？
+  .appointment-confirmation-container
+    table
+      - @appointment_info_hash.each do |key, appointment|
+        tr
+          th = key
+          td = appointment
+  .appointment-confirmation-link
+    = link_to "予約確定", appointment_confirmation_service_path, method: :post
+    = link_to "予約を取り消す", appointment_delete_service_path, method: :post

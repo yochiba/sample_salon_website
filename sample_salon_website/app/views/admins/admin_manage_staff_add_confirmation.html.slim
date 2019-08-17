@@ -1,0 +1,22 @@
+.staff-add-confirmation
+  h2 下記の登録情報でよろしいでしょうか？
+  table
+    tr
+      th 姓:
+      td = session[:staff_info]["lastname"]
+    tr
+      th 名:
+      td = session[:staff_info]["firstname"]
+    tr
+      th 表示名
+      td = session[:staff_info]["display_name"]
+    tr
+      th Email
+      td = session[:staff_info]["email"]
+
+  = link_to "登録", admin_manage_staff_add_confirmation_service_path("done"), method: :post
+  = link_to "修正", admin_manage_staff_add_confirmation_service_path("cancel"), method: :post
+    
+    
+  
+  

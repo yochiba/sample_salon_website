@@ -1,3 +1,55 @@
 // Place all the styles related to the admins controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+@charset "UTF-8";
+@import "./textTemplate";
+@import "./template";
+
+.admin-account {
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+  }
+  .admin-menu {
+    width: 80%;
+    height: auto;
+    margin: 0 auto;
+    .admin-menu-box {
+      width: 70%;
+      height: auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      margin: 20px auto;
+      a {
+        @include link_with_border(40%, 65px, 20px, #f5f6fa, 0);
+      }
+    }
+  }
+}
+
+.admin-manage-appointment {
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+  }
+  .admin-manage-appointment-table {
+    @include table(80%, auto);
+    a {
+      @include link_with_border(100%, 25px, 16px, #f5f6fa, 5px);
+    }
+  }
+}
+
+.admin-manage-contact {
+  @include background(80%, auto, 20px, 20px, #333, 0.4);
+  h3 {
+    @include theme-text(20px, #f5f6fa);
+  }
+  .admin-manage-contact-table {
+    @include table(80%, auto);
+    a {
+      @include link_with_border(100%, 25px, 16px, #f5f6fa, 5px);
+    }
+  }
+}

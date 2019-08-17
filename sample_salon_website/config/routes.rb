@@ -30,6 +30,13 @@ Rails.application.routes.draw do
   get '/admin_manage_appointment', to: 'admins#admin_manage_appointment', as: 'admin_manage_appointment'
   post '/admin_manage_appointment/:appointment_id', to: 'admins#admin_manage_appointment_service', as: 'admin_manage_appointment_service'
   get '/admin_manage_contact', to: 'admins#admin_manage_contact', as: 'admin_manage_contact'
+  get '/admin_manage_staff', to: 'admins#admin_manage_staff', as: 'admin_manage_staff'
+  get '/admin_manage_staff_list', to: 'admins#admin_manage_staff_list', as: 'admin_manage_staff_list'
+  get '/admin_manage_staff_add', to: 'admins#admin_manage_staff_add', as: 'admin_manage_staff_add'
+  post '/admin_manage_staff_add', to: 'admins#admin_manage_staff_add_service', as: 'admin_manage_staff_add_service'
+  get '/admin_manage_staff_add_confirmation', to: 'admins#admin_manage_staff_add_confirmation', as: 'admin_manage_staff_add_confirmation'
+  post '/admin_manage_staff_add_confirmation/:flg', to: 'admins#admin_manage_staff_add_confirmation_service', as: 'admin_manage_staff_add_confirmation_service'
+  get '/admin_manage_staff_shift', to: 'admins#admin_manage_staff_shift', as: 'admin_manage_staff_shift'
   post '/admin_logout', to: 'admins#admin_logout_service', as: 'admin_logout_service'
 
   # services controller
