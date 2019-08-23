@@ -16,22 +16,22 @@ class AdminsController < ApplicationController
 
   def admin_login
     if session[:admin_id].present?
-      redirect_to "/admin_account"
+      redirect_to admin_account_path
     end
   end
 
   def admin_login_service
     admin_info = Admin.new
     login_check_hash = admin_info.login_checker(params[:admin_id], params[:password])
-    login_flg = login_check_hash[:login_flg]
-    flash.now[:notice] = login_check_hash[:flash_message]
+    login_flg = login_check_hash["login_flg"]
+    flash.now[:notice] = login_check_hash["flash_message"]
 
     if login_flg == 4
-      logger.info("ログインに成功しました。")
+      logger.info("[info]: ログインに成功しました。")
       session[:admin_id] = params[:admin_id]
-      redirect_to "/admin_account"
+      redirect_to admin_account_path
     else
-      logger.info("ログインに失敗しました。原因は#{login_flg}です。")
+      logger.info("[info]: ログインに失敗しました。原因は#{login_flg}です。")
       render "/admins/admin_login"
     end
   end
@@ -49,20 +49,24 @@ class AdminsController < ApplicationController
   end
 
   def admin_add_service
-    admin_info = Admin.new(
-      firstname: params[:firstname],
-      lastname: params[:lastname],
-      email: params[:email],
-      adminid: params[:adminid],
-      password: params[:password],
-      password_confirmation: params[:password_confirmation]
+    admin = Admin.new
+    #TODO MVCを意識するならこれでいいけど、無駄かも？コントローラーに直書きでもいい気がする
+    registration_flg = admin.admin_registration?(
+      params[:firstname],
+      params[:lastname],
+      params[:email],
+      params[:admin_id],
+      params[:password],
+      params[:password_confirmation]
     )
-    if admin_info.valid?
-      admin_info.save!
-      flash.now[:notice] = "ユーザーを追加しました。"
-      redirect_to "/admin_manage"
+    
+    if registration_flg
+      session[:preuser_id] = params[:user_id]
+      logger.info("[info]: 新たな管理者情報が登録されました。確認画面へ進みます。")
+      redirect_to admin_manage_path
     else
-      flash.now[:notice] = "ユーザー追加に失敗しました。"
+      logger.info("[info]: 管理者情報の登録に失敗しました。 ")
+      flash.now[:notice] = "管理者情報登録に失敗しました。"
       render "/admins/admin_add"
     end
   end
@@ -116,7 +120,7 @@ class AdminsController < ApplicationController
       if other_admin_info.present?
         flash.now[:notice] = "管理者[#{other_admin_info.adminid}]を削除しました"
         other_admin_info.destroy!
-        redirect_to "/admin_manage"
+        redirect_to admin_manage_path
       end
     else
       flash.now[:notice] = "管理者の削除に失敗しました。"
@@ -140,31 +144,35 @@ class AdminsController < ApplicationController
   end
 
   def admin_manage_staff
+    @staffs = Staff.all
   end
 
-  def admin_manage_staff_list
-    @staffs = Staff.all
+  def admin_manage_staff_shift
+    @staff_info = Staff.find_by(id: params[:staff_id])
+    appointments_info = Appointment.new
+    @staff_shift_array = appointments_info.staff_shift_manager(params[:staff_id])
   end
 
   def admin_manage_staff_add
   end
 
   def admin_manage_staff_add_service
-    lastname = params[:lastname]
-    firstname = params[:firstname]
-    display_name = params[:display_name]
-    email = params[:email]
-
     staff = Staff.new
-    staff_info_hash = staff.get_staff_info_hash(lastname, firstname, display_name, email)
-    staff_add_error_message = staff.staff_add_form_checker(lastname, firstname, display_name, email)
-    
-    if staff_add_error_message.blank?
+    staff_info_hash = staff.get_staff_info_hash(
+      params[:lastname],
+      params[:firstname],
+      params[:staff_id],
+      params[:display_name],
+      params[:email],
+      params[:password], 
+      params[:password_confirmation]
+    )
+    if staff_info_hash["error_message"].blank?
       session[:staff_info] = staff_info_hash
       redirect_to admin_manage_staff_add_confirmation_path
     else
-      flash[:notice] = staff_add_error_message
-      redirect_to admin_manage_staff_add_path
+       flash[:notice] = staff_info_hash["error_message"]
+       redirect_to admin_manage_staff_add_path
     end
   end
 
@@ -174,18 +182,18 @@ class AdminsController < ApplicationController
   def admin_manage_staff_add_confirmation_service
     if params[:flg] == "done"
       staff = Staff.new
-      staff.staff_registrator(session[:staff_info])
+      registered_flg = staff.staff_registrator(session[:staff_info])
       session.delete(:staff_info)
-      flash[:notice] = "スタッフ登録が完了しました。"
+      if registered_flg
+        flash[:notice] = "スタッフ登録が完了しました。"
+      else
+        flash[:notice] = "スタッフ登録に失敗しました。"
+      end
     else
       session.delete(:staff_info)
       flash[:notice] = "スタッフ登録を取り消しました。"
     end
-    redirect_to admin_manage_staff_list_path
-  end
-
-  def admin_manage_staff_shift
-
+    redirect_to admin_manage_staff_path
   end
 
   def admin_logout_service

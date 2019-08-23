@@ -7,12 +7,18 @@
     tr
       th 名:
       td = session[:staff_info]["firstname"]
+      tr
+      th スタッフＩＤ:
+      td = session[:staff_info]["staff_id"]
     tr
       th 表示名
       td = session[:staff_info]["display_name"]
     tr
       th Email
       td = session[:staff_info]["email"]
+    tr
+      th パスワード
+      td 非表示
 
   = link_to "登録", admin_manage_staff_add_confirmation_service_path("done"), method: :post
   = link_to "修正", admin_manage_staff_add_confirmation_service_path("cancel"), method: :post

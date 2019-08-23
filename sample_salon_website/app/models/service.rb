@@ -5,6 +5,7 @@ class Service < ApplicationRecord
   validates :servicetime, presence: true
   validates :serviceprice, presence: true
 
+  # FIXME entity作る
   def get_service_categories
     service_category_array = [
       "カット",

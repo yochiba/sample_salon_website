@@ -26,7 +26,6 @@
           - check_date = date_list[date_counter]
           - reserved_flg_staff = false
           - reserved_flg_nostaff = false
-          // FIXME 下記の@reserved_appointment_listでtotaltokenを取得してトークン分は予約を埋める。
           - if @reserved_appointment_hash["#{check_date}"].present?
             - if @reserved_appointment_hash["#{check_date}"][start_token_id] == 1
               - reserved_flg_staff = true

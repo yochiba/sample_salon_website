@@ -1,3 +1,5 @@
+require 'date'
+
 class Admin < ApplicationRecord
   validates :firstname, presence: true
   validates :lastname, presence: true
@@ -9,6 +11,7 @@ class Admin < ApplicationRecord
 
   def login_checker(admin_id, password)
     login_check_hash = {}
+    flash_message = nil
     admin_info = Admin.find_by(adminid: admin_id)
     login_flg = 0
     if admin_info.present? && password.present? && admin_info.authenticate(password)
@@ -27,29 +30,46 @@ class Admin < ApplicationRecord
       login_flg = 3
       flash_message = "管理者IDかパスワードが違います。"
     end
-    login_check_hash[:login_flg] = login_flg
-    login_check_hash[:flash_message] = flash_message
+    login_check_hash.store("login_flg", login_flg)
+    login_check_hash.store("flash_message", flash_message)
     
     return login_check_hash
+  end
+
+  def admin_registration?(firstname, lastname, email, admin_id, password, password_confirmation)
+    admin_info = Admin.new(
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      adminid: admin_id,
+      password: password,
+      password_confirmation: password_confirmation
+      )
+    if admin_info.valid?
+      admin_info.save!
+      return true
+    else
+      return false
+    end
   end
 
   def admin_edit_handler(lastname, firstname, email, admin_id)
     admin_edit_hash = {}
     admin_info = Admin.find_by(adminid: admin_id)
     if lastname.present? && lastname != admin_info.lastname
-      admin_edit_hash[:edited_lastname] = lastname
+      admin_edit_hash.store("edited_lastname", lastname)
     end
 
     if firstname.present? && lastname != admin_info.firstname
-      admin_edit_hash[:edited_firstname] = firstname
+      admin_edit_hash.store("edited_firstname", firstname)
     end
 
     if email.present? && email != admin_info.email
-      admin_edit_hash[:edited_email] = email
+      admin_edit_hash.store("edited_email", email)
     end
 
     if admin_id.present? && admin_id != admin_info.admin_id
-      admin_edit_hash[:edited_admin_id] = admin_id
+      admin_edit_hash.store("edited_admin_id", admin_id)
     end
     return admin_edit_hash
     # パスワード編集処理

@@ -7,6 +7,10 @@ class ServicesController < ApplicationController
     :service_delete
   ]}
 
+  after_action  :delete_service_session, {only: [
+    :service_manage
+  ]}
+
   def service_manage
     @admin_info = Admin.find_by(adminid: session[:admin_id])
     @services = Service.all
@@ -19,7 +23,7 @@ class ServicesController < ApplicationController
     # @q = Service.ransack(params[:q])
     # @service_info = @q.result(distinct: true).recent
     service_info = Service.where("servicekeyword LIKE ?", "%#{params[:keyword]}%")
-    if service_info.present?
+    if service_info.present? && params[:keyword].present?
       # TODO 検索結果件数の表示
       flash[:search_result] = "検索結果"
       service_name_list = []
@@ -28,10 +32,10 @@ class ServicesController < ApplicationController
         logger.debug("[debug]: #{service.servicename}")
       end
       session[:service] = service_name_list
-      redirect_to "/service_manage"
+      redirect_to service_manage_path
     else
-      flash.now[:search_result] = "検索結果が見つかりませんでした"
-      render "/services/service_manage"
+      flash[:search_result] = "検索結果が見つかりませんでした"
+      redirect_to service_manage_path
     end
   end
 
@@ -113,5 +117,9 @@ class ServicesController < ApplicationController
       flash[:notice] = "ログインしてください。"
       redirect_to admin_login_path
     end
+  end
+
+  def delete_service_session
+    session.delete(:service)
   end
 end

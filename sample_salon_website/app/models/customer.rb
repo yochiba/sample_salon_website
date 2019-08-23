@@ -8,23 +8,43 @@ class Customer < ApplicationRecord
   
   has_secure_password
 
-  # ユーザー登録(registration_service)
+  # ユーザー登録フォーム情報確認
+  def get_customer_info_hash(lastname, firstname, age, gender, user_id, email, password, password_confirmation)
+    error_message = registration_form_checker(lastname, firstname, age, gender, user_id, email, password, password_confirmation)
+    customer_info_hash = {}
+    if error_message.present?
+      customer_info_hash.store("error_message", error_message)
+    else
+      customer_info_hash.store("lastname", lastname)
+      customer_info_hash.store("firstname", firstname)
+      customer_info_hash.store("age", age)
+      customer_info_hash.store("gender", gender)
+      customer_info_hash.store("staff_id", user_id)
+      customer_info_hash.store("email", email)
+      customer_info_hash.store("password", password)
+      customer_info_hash.store("password_confirmation", password_confirmation)
+    end
+    return customer_info_hash
+  end
+
   # TODO パスワードと確認用パスワードが一致しない場合のflash処理を追加
-  def customer_registration?(firstname, lastname, age, gender, email, user_id, password, password_confirmation)
+  def customer_registrator(customer_info_hash)
     customer_info = Customer.new(
-      firstname: firstname,
-      lastname: lastname,
-      age: age,
-      gender: gender,
-      email: email,
-      userid: user_id,
-      password: password,
-      password_confirmation: password_confirmation
-      )
+      firstname: customer_info_hash["firstname"],
+      lastname: customer_info_hash["lastname"],
+      userid: customer_info_hash["user_id"],
+      age: customer_info_hash["age"],
+      gender: customer_info_hash["gender"],
+      email: customer_info_hash["email"],
+      password: customer_info_hash["password"],
+      password_confirmation: customer_info_hash["password_confirmation"]
+    )
     if customer_info.valid?
       customer_info.save!
+      logger.debug("[info]: ユーザー登録に成功しました。")
       return true
     else
+      logger.debug("[info]: ユーザー登録に失敗しました。")
       return false
     end
   end
@@ -32,6 +52,7 @@ class Customer < ApplicationRecord
   # ログイン確認(login_service)
   def login_checker(user_id, password)
     login_check_hash = {}
+    flash_message = nil
     customer_info = Customer.find_by(userid: user_id)
     login_flg = 0
     if customer_info.present? && password.present? && customer_info.authenticate(password)
@@ -49,8 +70,8 @@ class Customer < ApplicationRecord
       login_flg = 4
       flash_message = "ユーザーIDかパスワードが違います。"
     end
-    login_check_hash[:login_flg] = login_flg
-    login_check_hash[:flash_message] = flash_message
+    login_check_hash.store("login_flg", login_flg)
+    login_check_hash.store("flash_message", flash_message)
     return login_check_hash
   end
 
@@ -86,5 +107,43 @@ class Customer < ApplicationRecord
       message = "過去の予約はございません。"
       return message
     end
+  end
+
+  private
+  def registration_form_checker(lastname, firstname, user_id, age, gender, email, password, password_confirmation)
+    error_message = ""
+    error_message_array = []
+    if lastname.blank?
+      error_message_array.push("苗字")
+    end
+
+    if firstname.blank?
+      error_message_array.push("名前")
+    end
+
+    if user_id.blank?
+      error_message_array.push("ユーザーID")
+    end
+
+    if email.blank?
+      error_message_array.push("Email")
+    end
+
+    if password.blank? && password_confirmation
+      error_message_array.push("パスワード")
+    elsif password_confirmation.blank?
+      error_message_array.push("確認用パスワード")
+    end
+
+    if error_message_array.present?
+      error_message_array.each_with_index do |message, index|
+        if index == error_message_array.length - 1
+          error_message += "#{message}が入力されていません。"
+        else
+          error_message += "#{message}, "
+        end
+      end
+    end
+    return error_message
   end
 end

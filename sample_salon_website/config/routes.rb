@@ -31,13 +31,20 @@ Rails.application.routes.draw do
   post '/admin_manage_appointment/:appointment_id', to: 'admins#admin_manage_appointment_service', as: 'admin_manage_appointment_service'
   get '/admin_manage_contact', to: 'admins#admin_manage_contact', as: 'admin_manage_contact'
   get '/admin_manage_staff', to: 'admins#admin_manage_staff', as: 'admin_manage_staff'
-  get '/admin_manage_staff_list', to: 'admins#admin_manage_staff_list', as: 'admin_manage_staff_list'
+  get '/admin_manage_staff_shift/:staff_id', to: 'admins#admin_manage_staff_shift', as: 'admin_manage_staff_shift'
   get '/admin_manage_staff_add', to: 'admins#admin_manage_staff_add', as: 'admin_manage_staff_add'
   post '/admin_manage_staff_add', to: 'admins#admin_manage_staff_add_service', as: 'admin_manage_staff_add_service'
   get '/admin_manage_staff_add_confirmation', to: 'admins#admin_manage_staff_add_confirmation', as: 'admin_manage_staff_add_confirmation'
   post '/admin_manage_staff_add_confirmation/:flg', to: 'admins#admin_manage_staff_add_confirmation_service', as: 'admin_manage_staff_add_confirmation_service'
-  get '/admin_manage_staff_shift', to: 'admins#admin_manage_staff_shift', as: 'admin_manage_staff_shift'
   post '/admin_logout', to: 'admins#admin_logout_service', as: 'admin_logout_service'
+
+  # staffs controller
+  get '/staff_account', to: 'staffs#staff_account', as: 'staff_account'
+  get '/staff_login', to: 'staffs#staff_login', as: 'staff_login'
+  post '/staff_login', to: 'staffs#staff_login_service', as: 'staff_login_service'
+  post '/staff_logout', to: 'staffs#staff_logout_service', as: 'staff_logout_service'
+  get '/staff_shift', to: 'staffs#staff_shift', as: 'staff_shift'
+  get '/staff_vacation/:date', to: 'staffs#staff_vacation', as: 'staff_vacation'
 
   # services controller
   get '/service_manage', to: 'services#service_manage', as: 'service_manage'
@@ -62,7 +69,6 @@ Rails.application.routes.draw do
   post '/appointment_customer_info', to: 'appointments#appointment_customer_info_service', as: 'appointment_customer_info_service'
   get '/appointment_confirmation', to: 'appointments#appointment_confirmation', as: 'appointment_confirmation'
   post '/appointment_confirmation', to: 'appointments#appointment_confirmation_service', as: 'appointment_confirmation_service'
-  get '/appointment_complete', to: 'appointments#appointment_complete', as: 'appointment_complete'
   post '/appointment_delete', to: 'appointments#appointment_delete_service', as: 'appointment_delete_service'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

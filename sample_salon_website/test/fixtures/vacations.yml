@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  typeflg: 1
+  message: MyText
+  staffid: 1
+  lastname: MyString
+  firstname: MyString
+  vacationdate: 2019-08-24
+  permitflg: MyString
+
+two:
+  typeflg: 1
+  message: MyText
+  staffid: 1
+  lastname: MyString
+  firstname: MyString
+  vacationdate: 2019-08-24
+  permitflg: MyString

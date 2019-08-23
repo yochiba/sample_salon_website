@@ -1,12 +1,12 @@
 h2 登録情報確認ページ
 p
-  = "姓：#{@customer_info.lastname}"
+  = "姓：#{session[:customer_info]["lastname"]}"
 p
-  = "名：#{@customer_info.firstname}"
+  = "名：#{session[:customer_info]["firstname"]}"
 p
-  = "Email：#{@customer_info.email}"
+  = "Email：#{session[:customer_info]["email"]}"
 p
-  = "ユーザー名：#{@customer_info.userid}"
+  = "ユーザー名：#{session[:customer_info]["userid}"]}"
 
 = link_to "登録", registration_confirmation_service_path("done"), method: :post
 = link_to "修正", registration_confirmation_service_path("cancel"), method: :post

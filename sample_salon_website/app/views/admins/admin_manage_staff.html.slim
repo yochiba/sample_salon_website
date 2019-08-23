@@ -1,6 +1,16 @@
 .admin-manage-staff
-  h3 スタッフ管理画面
-  .admin-staff
-    .admin-staff-box
-      = link_to "スタッフ一覧", admin_manage_staff_list_path
-      = link_to "シフト管理", admin_manage_staff_shift_path
+  = link_to "スタッフ追加", admin_manage_staff_add_path
+  h2 スタッフ一覧
+  .staff-list-container
+    table
+      tr
+        th 氏名
+        th 表示名
+        th Email
+        th シフト管理
+      - @staffs.each do |staff|
+        tr
+          td = "#{staff.lastname} #{staff.firstname}"
+          td = staff.displayname
+          td = staff.email
+          td = link_to "確認&編集", admin_manage_staff_shift_path(staff.id)

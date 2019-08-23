@@ -15,7 +15,7 @@ h3 サービス検索
   .service-result-box
     - session[:service].each do |service|
       p
-        = link_to "#{service}", service_edit_path(service)
+        = link_to "#{service}", service_detail_path(service)
 .services-table
   table
     tr
@@ -28,4 +28,3 @@ h3 サービス検索
         td = link_to "#{service.servicename}", service_detail_path(service.servicename)
         td = service.servicecategory
         td = "#{service.servicetime}分"
-        td = "#{service.serviceprice}円"

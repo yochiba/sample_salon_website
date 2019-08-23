@@ -1,1 +1,25 @@
-h2 スタッフシフト管理画面
+.staff-shift
+  h3 = "シフト管理：#{@staff_info.displayname}"
+  table.shift-table
+    tr
+      th 氏名
+      th サービス内容
+      th 予約時間
+      th 所要時間
+      - @staff_shift_array.each do |shift|
+        tr
+          td = "#{shift.lastname} #{shift.firstname}"
+          td = shift.servicename
+          td = "#{shift.displaystartdate} #{shift.displaystarttime}"
+          td = "#{shift.totalservicetime}分"
+  table.vacation-table
+    tr
+      th 日付
+      th 休暇種別
+      th メッセージ
+    
+    
+
+
+
+

@@ -1,0 +1,15 @@
+h2 スケジュール確認
+table
+  tr
+    th 日付
+    th スケジュール
+    th 休暇申請
+  - @monthly_dates_hash.each do |date, appointments|
+    tr
+      td = date.strftime("%m/%d(%a)")
+      td 
+        ul
+          - appointments.each do |appointment|
+            li = "#{appointment.displaystarttime} : #{appointment.servicename}(#{appointment.totalservicetime}分)"
+      td = link_to "申請",  staff_vacation_path(date)
+  

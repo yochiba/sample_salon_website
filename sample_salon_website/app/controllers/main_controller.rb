@@ -38,10 +38,9 @@ class MainController < ApplicationController
 
   def registration_service
     customer = Customer.new
-    #TODO MVCを意識するならこれでいいけど、無駄かも？コントローラーに直書きでもいい気がする
-    registration_flg = customer.customer_registration?(
-      params[:firstname],
+    customer_info_hash = customer.get_customer_info_hash(
       params[:lastname],
+      params[:firstname],
       params[:age],
       params[:gender],
       params[:email],
@@ -49,61 +48,59 @@ class MainController < ApplicationController
       params[:password],
       params[:password_confirmation]
     )
-    
-    if registration_flg
-      session[:preuser_id] = params[:user_id]
-      logger.info("[info]: 新たな顧客情報が登録されました。確認画面へ進みます。")
-      redirect_to "/registration_confirmation/"
+    if customer_info_hash["error_message"].blank?
+      session[:customer_info] = customer_info_hash
+      redirect_to registration_confirmation_path
     else
-      logger.info("[info]: 顧客情報の登録に失敗しました。 ")
-      flash.now[:notice] = "ユーザー情報登録に失敗しました。"
-      render "/main/registration/"
+       flash[:notice] = customer_info_hash["error_message"]
+       redirect_to registration_path
     end
   end
 
   def registration_confirmation
-    # 確認画面での情報確認用
-    @customer_info = Customer.find_by(userid: session[:preuser_id])
+    
   end
 
   def registration_confirmation_service
-    if params[:flg] == "done"
-      customer_info = Customer.find_by(userid: session[:preuser_id])
-      logger.info("[DEBUG] #{customer_info}")
-      logger.info("[DEBUG] #{customer_info}")
-      session[:user_id] = session[:preuser_id]
-      session.delete(:preuser_id)
-      logger.info("[info]: 新たな顧客情報が登録されました。")
-      redirect_to "/account/"
+    if params[:flg] == "done"  
+      customer = Customer.new
+      registered_flg = customer.customer_registrator(session[:customer_info])
+      session.delete(:customer_info)
+      if registered_flg
+        flash[:notice] = "ユーザー登録が完了しました。"
+      else
+        flash[:notice] = "ユーザー登録に失敗しました。"
+      end
     else
-      flash[:notice] = "顧客情報の登録を取り消しました。"
-      redirect_to "/registration/"
+      session.delete(:customer_info)
+      flash[:notice] = "ユーザー登録を取り消しました。"
     end
+    redirect_to registration_path
   end
 
   def login
     if session[:user_id].present?
-      redirect_to "/account"
+      redirect_to account_path
     end
   end
 
   def login_service
     customer = Customer.new
     login_hash = customer.login_checker(params[:user_id], params[:password])
-    login_flg = login_hash[:login_flg]
-    flash.now[:notice] = login_hash[:flash_message]
+    login_flg = login_hash["login_flg"]
+    flash.now[:notice] = login_hash["flash_message"]
     if login_flg == 0
       session[:user_id] = params[:user_id]
-      redirect_to "/account/"
+      redirect_to account_path
     else
-      logger.info("ログインに失敗しました。原因は#{login_flg}です。")
+      logger.info("[info]: ログインに失敗しました。原因は#{login_flg}です。")
       render "/main/login/"
     end
   end
 
   def logout_service
     session.delete(:user_id)
-    redirect_to "/login/"
+    redirect_to login_path
   end
 
   def contact
@@ -120,7 +117,7 @@ class MainController < ApplicationController
       contact_info.save!
       flash[:notice] = "お問い合わせが完了しました。"
       logger.info("[info]: お問い合わせを受け取りました。")
-      redirect_to "/contact"
+      redirect_to contact_path
     else
       flash.now[:notice] = "お問い合わせの送信に失敗しました。"
       logger.info("[info]: お問い合わせの送信に失敗しました。")
@@ -132,7 +129,7 @@ class MainController < ApplicationController
   def direct_login_checker
     if session[:user_id].blank?
       flash[:notice] = "ログインしてください。"
-      redirect_to "/login/"
+      redirect_to login_path
     end
   end
 

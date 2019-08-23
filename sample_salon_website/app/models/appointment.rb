@@ -99,7 +99,7 @@ class Appointment < ApplicationRecord
     nostaff_flg = 0
     # スタッフを選択せずに進んだ時の処理
     if staff_id.nil?
-      @services = Service.all()
+      # @services = Service.all()
       logger.info("[info]: スタッフが選択されていません。")
       nostaff_flg = 1
     end
@@ -112,8 +112,8 @@ class Appointment < ApplicationRecord
         appointment_staff = staff_info.displayname
       end
     end
-    appointment_staff_hash[:staff_id] = staff_id
-    appointment_staff_hash[:staff_name] = appointment_staff
+    appointment_staff_hash.store("staff_id", staff_id)
+    appointment_staff_hash.store("staff_name", appointment_staff)
 
     appointment_staff_array.push(appointment_staff_hash)
     appointment_staff_array.push(nostaff_flg)
@@ -242,7 +242,8 @@ class Appointment < ApplicationRecord
     staff_flg = false
     if staff_id != 0
       staff_flg = true
-    end    
+    end
+    today = Date.today
     # key:日付, value:トークンID順のトークンフラグ(0 or 1)
     daily_tokens_flg_hash = {}
     # 4ヶ月分の日付配列を回す
@@ -253,7 +254,7 @@ class Appointment < ApplicationRecord
       if staff_flg
         while i < business_hour_array.length do
           end_index = business_hour_array.length - total_token + 1
-          if i >= end_index || date.wday == 2
+          if i >= end_index || date.wday == 2 || date == today
             token_flg_array.push(1)
           else
             token_flg_array.push(0)
@@ -284,7 +285,6 @@ class Appointment < ApplicationRecord
         end
       end
       daily_tokens_flg_hash.store(date.to_s, token_flg_array)
-      # logger.info("[info]::::appointment check #{date} #{token_flg_array}")
     end
     return daily_tokens_flg_hash
   end
@@ -300,7 +300,6 @@ class Appointment < ApplicationRecord
       i = 0
       while  i < token_array.length do
         if token_array[i] == 1
-          # logger.info("[info]::::array check IN")
           if unreserved_token_counter < total_token
             token = i - unreserved_token_counter
             token_end = i - 1
@@ -366,32 +365,34 @@ class Appointment < ApplicationRecord
 
     appointment_time_hash= {}
     # 予約開始日
-    appointment_time_hash[:start_date] = appointment_start_date
+    appointment_time_hash.store("start_date", appointment_start_date)
     # 予約開始時間
-    appointment_time_hash[:start_time] = appointment_start_time
+    appointment_time_hash.store("start_time", appointment_start_time)
     # 予約開始日付
-    appointment_time_hash[:display_date] = appointment_start_date.strftime("%m月%d日(%a)")
+    appointment_time_hash.store("display_date", appointment_start_date.strftime("%m月%d日(%a)"))
     # 予約開始日(表示用)
-    appointment_time_hash[:display_start_date] = display_start_date
+    appointment_time_hash.store("display_start_date", display_start_date)
     # 予約開始時(表示用)
-    appointment_time_hash[:display_start_time] = display_start_time
+    appointment_time_hash.store("display_start_time", display_start_time)
     # スタートトークンID
-    appointment_time_hash[:start_token_id] = start_token_id
+    appointment_time_hash.store("start_token_id", start_token_id)
     # 合計サービス時間
-    appointment_time_hash[:total_time] = total_time
+    appointment_time_hash.store("total_time",total_time)
 
     return appointment_time_hash
   end
 
   def get_appointment_customer_hash(firstname, lastname, email)
     appointment_customer_hash = {}
-    appointment_customer_hash[:firstname] = firstname
-    appointment_customer_hash[:lastname] = lastname
-    appointment_customer_hash[:email] = email
+    appointment_customer_hash.store("firstname", firstname)
+    appointment_customer_hash.store("lastname", lastname)
+    appointment_customer_hash.store("email", email)
     return appointment_customer_hash
   end
 
-  # これで汎用的にセッション削除できるようにする
-  # def delete_session()
-  # end
+  # admins_controller上で使用するスタッフシフト管理処理
+  def staff_shift_manager(staff_id)
+    appointments = Appointment.where(staffid: staff_id, past_flg: 0)
+    return appointments
+  end
 end

@@ -180,25 +180,20 @@ class AppointmentsController < ApplicationController
       displaystarttime: session[:appointment_date]["display_start_time"],
       past_flg: 0
     )
+    logger.info("[info]: #{session[:appointment_date]["start_date"]}")
     if appointment_info.valid?
       appointment_info.save!
-      logger.info("[info]: #{session[:appointment_date]["start_date"]}")
-      redirect_to appointment_complete_path
+      session.delete(:appointment_service)
+      session.delete(:appointment_staff)
+      session.delete(:appointment_date)
+      session.delete(:appointment_customer)
+      flash[:notice] = "予約が完了しました。ご来店お待ちしております。"
+      redirect_to home_path
     else
+      logger.info("[info]: 予約に失敗しました。")
       flash[:notice] = "予約に失敗しました。もう一度やり直してください。"
-      # session.delete(:appointment_service)
-      # session.delete(:appointment_staff)
-      # session.delete(:appointment_date)
-      # session.delete(:appointment_customer)
       render "/main/home"
     end
-  end
-
-  def appointment_complete
-    # session.delete(:appointment_service)
-    # session.delete(:appointment_staff)
-    # session.delete(:appointment_date)
-    # session.delete(:appointment_customer)
   end
 
   # 予約キャンセルおよび予約途中での破棄の役割
@@ -220,13 +215,4 @@ class AppointmentsController < ApplicationController
       redirect_to appointment_path
     end
   end
-
-  # def appointment_session_delete
-  #   if session.delete(:appointment_service).present? || session.delete(:appointment_staff).present? || session.delete(:appointment_date).present? || session.delete(:appointment_customer).present?
-  #     session.delete(:appointment_service)
-  #     session.delete(:appointment_staff)
-  #     session.delete(:appointment_date)
-  #     session.delete(:appointment_customer)
-  #   end
-  # end
 end
